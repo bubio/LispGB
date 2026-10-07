@@ -50,4 +50,5 @@
                (:file "suites/harness")
                (:file "unit/bus-test")
                (:file "unit/cpu-test")
-               (:file "unit/timer-test")))
+               (:file "unit/timer-test")
+               (:file "unit/mbc-test")))
