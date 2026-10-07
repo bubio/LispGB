@@ -185,7 +185,7 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 - [X] T054 [P] [US4] 24bit 非圧縮 BMP の書き出しを `src/app/bmp.lisp` に書く（`write-bmp (path argb-pixels width height)`）
 - [X] T055 [US4] ヘッドレスモードを `src/app/main.lisp` に追加する。`--headless --frames N [--screenshot PATH]` のときは SDL2 を**読み込まずに** N フレーム実行し、スクリーンショットを保存して終了コード 0 で終わる。`--frames` がないとエラーにする（contracts/cli.md）。オプションの解析は、US3 の T058 で作る `src/app/cli.lisp` に移すので、ここでは最小限でよい
 - [X] T056 [US4] テスト一覧の出力を整え、`tests/suites/` の各テストがスイート名ごとにまとまって表示されるようにし、最後に「合格 / 不合格 / 既知の不合格」の件数を出す（`tests/framework.lisp`）。既知の不合格の一覧と理由を `docs/dev/known-failures.md` に書く（憲法 I）
-- [ ] T057 [US4] quickstart.md の手順1と3で確認する
+- [X] T057 [US4] quickstart.md の手順1と3で確認する
 
 **Checkpoint**: US1、US2、US4 が動く
 
