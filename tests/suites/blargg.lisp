@@ -1,0 +1,13 @@
+(in-package #:lispgb.tests)
+
+(defun register-blargg-serial (path)
+  (let ((name (intern (string-upcase (format nil "BLARGG/~A" (pathname-name path))) :lispgb.tests)))
+    (setf (gethash name *tests*)
+          (lambda ()
+            (multiple-value-bind (result machine) (blargg-serial-result path :max-frames 6000)
+              (is (eq result :pass) (format nil "~A: ~A" result (serial-text machine))))))))
+(let ((root (asdf:system-relative-pathname "lispgb/tests" "tests/roms/blargg/")))
+  (dolist (path (append (directory (merge-pathnames "cpu_instrs/individual/*.gb" root))
+                       (directory (merge-pathnames "cpu_instrs/cpu_instrs.gb" root))
+                       (directory (merge-pathnames "instr_timing/instr_timing.gb" root))))
+    (register-blargg-serial path)))
