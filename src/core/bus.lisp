@@ -1,1 +1,65 @@
-;;; 実装は対応タスクで追加する。
+(in-package #:lispgb.core)
+(declaim #.(core-optimize-spec))
+
+(defun zero-octets (size) (make-array size :element-type 'u8 :initial-element 0))
+(defstruct bus
+  (mode :dmg :type symbol) cart
+  (rom (zero-octets 32768) :type octets) (ram (zero-octets 8192) :type octets)
+  (wram (zero-octets 32768) :type octets) (vram (zero-octets 16384) :type octets)
+  (oam (zero-octets 160) :type octets) (hram (zero-octets 127) :type octets)
+  (io (zero-octets 128) :type octets) (ie 0 :type u8) (if 0 :type u8)
+  (svbk 1 :type u8) (vbk 0 :type u8)
+  (cycles 0 :type fixnum) (hw-cycles 0 :type fixnum)
+  (double-speed nil :type boolean) (speed-switch-prepared nil :type boolean)
+  timer ppu apu joypad
+  (serial-log (make-array 0 :element-type 'u8 :adjustable t :fill-pointer 0)))
+
+;; 周辺機器は各実装タスクでこの境界に接続する。
+(defun bus-device-read (bus address) (aref (bus-io bus) (- address #xff00)))
+(defun bus-device-write (bus address value) (setf (aref (bus-io bus) (- address #xff00)) value))
+(defun bus-tick (bus cycles)
+  (incf (bus-cycles bus) cycles)
+  (incf (bus-hw-cycles bus) (if (bus-double-speed bus) (ash cycles -1) cycles)))
+
+(declaim (inline wram-offset))
+(defun wram-offset (bus address)
+  (+ (logand address #xfff)
+     (if (logbitp 12 address) (* 4096 (max 1 (bus-svbk bus))) 0)))
+
+(defun bus-read (bus address)
+  (declare (type bus bus) (type u16 address))
+  (cond
+    ((< address #x8000) (aref (bus-rom bus) (mod address (length (bus-rom bus)))))
+    ((< address #xa000) (aref (bus-vram bus) (+ (* 8192 (bus-vbk bus)) (- address #x8000))))
+    ((< address #xc000) (aref (bus-ram bus) (- address #xa000)))
+    ((< address #xfe00) (aref (bus-wram bus) (wram-offset bus address)))
+    ((< address #xfea0) (aref (bus-oam bus) (- address #xfe00)))
+    ((< address #xff00) #xff)
+    ((= address #xffff) (bus-ie bus))
+    ((>= address #xff80) (aref (bus-hram bus) (- address #xff80)))
+    ((= address #xff0f) (logior #xe0 (bus-if bus)))
+    ((= address #xff4f) (if (eq (bus-mode bus) :cgb) (logior #xfe (bus-vbk bus)) #xff))
+    ((= address #xff70) (if (eq (bus-mode bus) :cgb) (logior #xf8 (bus-svbk bus)) #xff))
+    (t (bus-device-read bus address))))
+
+(defun bus-write (bus address value)
+  (declare (type bus bus) (type u16 address) (type u8 value))
+  (cond
+    ((< address #x8000) nil)
+    ((< address #xa000) (setf (aref (bus-vram bus) (+ (* 8192 (bus-vbk bus)) (- address #x8000))) value))
+    ((< address #xc000) (setf (aref (bus-ram bus) (- address #xa000)) value))
+    ((< address #xfe00) (setf (aref (bus-wram bus) (wram-offset bus address)) value))
+    ((< address #xfea0) (setf (aref (bus-oam bus) (- address #xfe00)) value))
+    ((< address #xff00) nil)
+    ((= address #xffff) (setf (bus-ie bus) value))
+    ((>= address #xff80) (setf (aref (bus-hram bus) (- address #xff80)) value))
+    ((= address #xff0f) (setf (bus-if bus) (logand #x1f value)))
+    ((= address #xff4f) (when (eq (bus-mode bus) :cgb) (setf (bus-vbk bus) (logand 1 value))))
+    ((= address #xff70) (when (eq (bus-mode bus) :cgb) (setf (bus-svbk bus) (logand 7 value))))
+    ((= address #xff02)
+     (setf (aref (bus-io bus) 2) value)
+     (when (= value #x81)
+       (vector-push-extend (aref (bus-io bus) 1) (bus-serial-log bus))
+       (setf (aref (bus-io bus) 2) 1 (bus-if bus) (logior 8 (bus-if bus)))))
+    (t (bus-device-write bus address value)))
+  value)

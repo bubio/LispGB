@@ -22,4 +22,3 @@
     (lispgb.core::bus-write bus #xff01 65)
     (lispgb.core::bus-write bus #xff02 #x81)
     (is (equalp #(65) (lispgb.core::bus-serial-log bus)))))
-(dolist (name '(bus-memory-map bus-serial)) (register-pending name "T012"))
