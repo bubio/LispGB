@@ -110,7 +110,7 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 
 - [X] T020 [P] [US1] Timer の単体テストを `tests/unit/timer-test.lisp` に書く（DIV のリセット、TAC のビット選択、TIMA のオーバーフローと遅延再ロード、DIV への書き込みでの立ち下がり検出）
 - [X] T021 [US1] Timer を `src/core/timer.lisp` に書く。data-model.md の Timer（div-counter u16、tima、tma、tac、overflow-delay）。`~/Develop/ruxboy/Packages/Core/Src/Bus.rux` の該当部分（Timer）から移す
-- [ ] T022 [US1] Mooneye の timer / interrupts テストを `tests/suites/mooneye.lisp` に書く。`tests/roms/mooneye/acceptance/` 以下の ROM をすべて列挙して実行する。`rapid_toggle`、`reti_timing`、`stat_lyc_onoff` は、RuxBoy でも不合格の既知の失敗として `register-known-failure` する
+- [X] T022 [US1] Mooneye の timer / interrupts テストを `tests/suites/mooneye.lisp` に書く。`tests/roms/mooneye/acceptance/` 以下の ROM をすべて列挙して実行する。`rapid_toggle`、`reti_timing`、`stat_lyc_onoff` は、RuxBoy でも不合格の既知の失敗として `register-known-failure` する
 
 ### 3-C. PPU（DMG）
 

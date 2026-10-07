@@ -53,4 +53,5 @@
                (:file "unit/timer-test")
                (:file "unit/mbc-test")
                (:file "suites/blargg")
-               (:file "unit/ppu-test")))
+               (:file "unit/ppu-test")
+               (:file "suites/mooneye")))
