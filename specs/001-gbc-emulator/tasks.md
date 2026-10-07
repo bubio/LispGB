@@ -108,7 +108,7 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 
 ### 3-B. 割り込みとタイマー
 
-- [ ] T020 [P] [US1] Timer の単体テストを `tests/unit/timer-test.lisp` に書く（DIV のリセット、TAC のビット選択、TIMA のオーバーフローと遅延再ロード、DIV への書き込みでの立ち下がり検出）
+- [X] T020 [P] [US1] Timer の単体テストを `tests/unit/timer-test.lisp` に書く（DIV のリセット、TAC のビット選択、TIMA のオーバーフローと遅延再ロード、DIV への書き込みでの立ち下がり検出）
 - [ ] T021 [US1] Timer を `src/core/timer.lisp` に書く。data-model.md の Timer（div-counter u16、tima、tma、tac、overflow-delay）。`~/Develop/ruxboy/Packages/Core/Src/Bus.rux` の該当部分（Timer）から移す
 - [ ] T022 [US1] Mooneye の timer / interrupts テストを `tests/suites/mooneye.lisp` に書く。`tests/roms/mooneye/acceptance/` 以下の ROM をすべて列挙して実行する。`rapid_toggle`、`reti_timing`、`stat_lyc_onoff` は、RuxBoy でも不合格の既知の失敗として `register-known-failure` する
 
@@ -292,3 +292,9 @@ Task: "APU の単体テストを tests/unit/apu-test.lisp に書く"
 - 各チェックポイントで、そのストーリーを単独で確かめる
 - タスクが1つ完了するごとにコミットする。プッシュは指示があるまでしない（憲法 v1.1.0）
 - 市販のゲーム ROM での確認が必要になったら、実行前にユーザーに相談する
+
+### 実行時に確認した依存順序（2026-10-07）
+
+T018 の実 ROM 検証で Timer と MBC1 が必要と判明したため、ユーザーの継続指示により
+T020 → T021、T027 → T028 を T018 より前に実行する。T018 のスイートは依存実装後に
+ASDF へ登録する。T018 の失敗を既知失敗として隠さず、全13本の合格を完了条件とする。

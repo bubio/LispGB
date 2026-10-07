@@ -49,4 +49,5 @@
                (:file "unit/cartridge-test")
                (:file "suites/harness")
                (:file "unit/bus-test")
-               (:file "unit/cpu-test")))
+               (:file "unit/cpu-test")
+               (:file "unit/timer-test")))
