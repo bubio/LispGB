@@ -19,4 +19,3 @@
             (is (= 0 (little-endian-at bytes 30 4)))
             (is (equalp #(255 0 0 255 255 255 0 0 0 0 255 0 255 0 0 0) (subseq bytes 54)))))
       (when (probe-file path) (delete-file path)))))
-(register-pending 'bmp-header-and-pixels "T054")
