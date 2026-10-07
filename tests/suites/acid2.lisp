@@ -1,0 +1,8 @@
+(in-package #:lispgb.tests)
+(let ((path (asdf:system-relative-pathname "lispgb/tests" "tests/roms/acid2/dmg-acid2.gb")))
+  (when (probe-file path)
+    (deftest dmg-acid2 ()
+      (let* ((machine (run-rom path :max-frames 100)) (hash (framebuffer-fnv1a64 machine)))
+        (unless (= hash #x17a0f9970ac4d084)
+          (dump-framebuffer-ppm machine (asdf:system-relative-pathname "lispgb" "build/dmg-acid2.ppm")))
+        (is (= hash #x17a0f9970ac4d084) (format nil "実際のハッシュ: ~16,'0X" hash))))))

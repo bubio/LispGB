@@ -1,6 +1,6 @@
 (in-package #:lispgb.tests)
 (defun register-mooneye (path)
-  (let ((name (intern (string-upcase (format nil "MOONEYE/~A" (pathname-name path))) :lispgb.tests)))
+  (let ((name (intern (string-upcase (format nil "MOONEYE/~A" (enough-namestring path (asdf:system-relative-pathname "lispgb/tests" "tests/roms/mooneye/")))) :lispgb.tests)))
     (setf (gethash name *tests*)
           (lambda ()
             (multiple-value-bind (result machine) (mooneye-result path :max-frames 600)
@@ -9,8 +9,6 @@
     (when (member (pathname-name path) '("rapid_toggle" "reti_timing" "stat_lyc_onoff") :test #'string=)
       (register-known-failure name "RuxBoy でも不合格のタイミングテスト"))))
 (let ((root (asdf:system-relative-pathname "lispgb/tests" "tests/roms/mooneye/acceptance/")))
-  ;; PPU のテストは T026 で同じスイートに追加する。
-  (dolist (path (append (directory (merge-pathnames "*.gb" root))
-                       (directory (merge-pathnames "timer/*.gb" root))
-                       (directory (merge-pathnames "interrupts/*.gb" root))))
+  ;; acceptance の全 ROM を再帰的に列挙する。
+  (dolist (path (directory (merge-pathnames "**/*.gb" root)))
     (register-mooneye path)))

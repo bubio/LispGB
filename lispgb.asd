@@ -54,4 +54,5 @@
                (:file "unit/mbc-test")
                (:file "suites/blargg")
                (:file "unit/ppu-test")
-               (:file "suites/mooneye")))
+               (:file "suites/mooneye")
+               (:file "suites/acid2")))
