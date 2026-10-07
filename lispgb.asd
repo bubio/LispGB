@@ -46,4 +46,5 @@
   :pathname "tests/"
   :serial t
   :components ((:file "framework")
-               (:file "unit/cartridge-test")))
+               (:file "unit/cartridge-test")
+               (:file "suites/harness")))
