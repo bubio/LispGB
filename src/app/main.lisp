@@ -31,7 +31,14 @@
                    (persistence-quiet-frames persistence) 0))
             ((and (persistence-pending persistence) (>= (incf (persistence-quiet-frames persistence)) 60))
              (flush-save-ram persistence machine))))))
-(defun play-machine (machine &key persistence)
+(defun handle-state-event (event machine rom-path audio)
+  (handler-case
+      (case event
+        (:save (write-file-atomically (state-path rom-path) (lispgb.core:save-state machine)))
+        (:load (lispgb.core:load-state machine (read-file-octets (state-path rom-path)))
+               (clear-audio audio)))
+    (error (condition) (format *error-output* "保存・復元エラー: ~A~%" condition))))
+(defun play-machine (machine &key persistence rom-path)
   (load-sdl2)
   (unwind-protect
       (progn
@@ -41,7 +48,10 @@
               (let ((audio (open-audio)) (input (make-input)))
                 (unwind-protect
                     (loop
-                      (when (member :quit (poll-input input)) (return))
+                      (let ((events (poll-input input)))
+                        (when (member :quit events) (return))
+                        (when rom-path
+                          (dolist (event events) (handle-state-event event machine rom-path audio))))
                       (lispgb.core:set-buttons machine (input-buttons input))
                       (sync-rtc machine)
                       (lispgb.core:run-frame machine)
@@ -60,7 +70,7 @@
     (handler-case
         (let* ((machine (lispgb.core:make-machine (read-file-octets (first args))))
                (persistence (open-persistence machine (first args))))
-          (unwind-protect (play-machine machine :persistence persistence)
+          (unwind-protect (play-machine machine :persistence persistence :rom-path (first args))
             (flush-save-ram persistence machine))
           (uiop:quit 0))
       (error (condition) (format *error-output* "実行エラー: ~A~%" condition) (uiop:quit 1)))))

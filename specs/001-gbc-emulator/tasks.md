@@ -168,7 +168,7 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 - [X] T048 [P] [US2] アトミックな書き込みを `src/app/fileio.lisp` に書く。`write-file-atomically (path octets)` は `<path>.tmp` に書いてから `rename` する。`read-file-octets (path)` も用意する
 - [X] T049 [P] [US2] パスの計算を `src/app/paths.lisp` に書く。ROM のパスから `.sav` と `.state` のパスを作る（拡張子を置き換える）
 - [X] T050 [US2] セーブ RAM の永続化を `src/app/main.lisp` に組み込む。起動時に `.sav` を読み込む（サイズが RAM のサイズと一致しなければ読み込まず、警告を出し、既存のファイルを `<名前>.sav.bak` に退避する）。毎フレーム `ram-dirty` を確認し、最後の書き込みから 60 フレーム何も起きなければ保存する。終了時は必ず保存する（FR-010）。電池なしのカートリッジでは何もしない
-- [ ] T051 [US2] F1 / F3 を `src/app/main.lisp` に組み込む。F1 で `save-state` を `.state` にアトミックに書く。F3 で読み込んで `load-state` し、成功したら音声のキューをクリアする（`SDL_ClearQueuedAudio`）。失敗したら日本語で理由を標準エラー出力に出し、実行を続ける
+- [X] T051 [US2] F1 / F3 を `src/app/main.lisp` に組み込む。F1 で `save-state` を `.state` にアトミックに書く。F3 で読み込んで `load-state` し、成功したら音声のキューをクリアする（`SDL_ClearQueuedAudio`）。失敗したら日本語で理由を標準エラー出力に出し、実行を続ける
 - [ ] T052 [US2] quickstart.md の手順5で確認する（`ram_64kb.gb` のコピーで `.sav` が 8192 バイトで作られること。F1 / F3 の動作）
 
 **Checkpoint**: US1 と US2 がどちらも動く
@@ -298,3 +298,5 @@ Task: "APU の単体テストを tests/unit/apu-test.lisp に書く"
 T018 の実 ROM 検証で Timer と MBC1 が必要と判明したため、ユーザーの継続指示により
 T020 → T021、T027 → T028 を T018 より前に実行する。T018 のスイートは依存実装後に
 ASDF へ登録する。T018 の失敗を既知失敗として隠さず、全13本の合格を完了条件とする。
+
+T052 の検証コマンドは T055 のヘッドレス CLI を使用するため、T053〜T055 の後で実施する。
