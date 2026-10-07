@@ -58,4 +58,5 @@
                (:file "suites/acid2")
                (:file "unit/apu-test")
                (:file "unit/cgb-test")
-               (:file "unit/joypad-test")))
+               (:file "unit/joypad-test")
+               (:file "unit/savestate-test")))
