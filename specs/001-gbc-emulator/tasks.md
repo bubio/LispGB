@@ -114,7 +114,7 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 
 ### 3-C. PPU（DMG）
 
-- [ ] T023 [P] [US1] PPU の単体テストを `tests/unit/ppu-test.lisp` に書く（モード遷移のタイミング: OAM 80 ドット → 描画 → HBlank、ライン 144 で VBlank、LY=LYC での STAT 割り込み、LCD を off にしたときの LY=0、タイルの 2bpp デコード）
+- [X] T023 [P] [US1] PPU の単体テストを `tests/unit/ppu-test.lisp` に書く（モード遷移のタイミング: OAM 80 ドット → 描画 → HBlank、ライン 144 で VBlank、LY=LYC での STAT 割り込み、LCD を off にしたときの LY=0、タイルの 2bpp デコード）
 - [ ] T024 [US1] PPU（DMG 部分）を `src/core/ppu.lisp` に書く。data-model.md の Ppu。スキャンライン単位で BG、ウィンドウ（内部ラインカウンタを使う）、スプライト（1ライン10個まで、X 座標による優先順位）を描く。STAT 割り込みの立ち上がりを `stat-line` で判定する。framebuffer は ARGB8888 で、DMG の色の値は `~/Develop/ruxboy/Packages/Core/Src/Ppu.rux` と**同じ値**にする（acid2 のハッシュを流用するため。research R8）
 - [ ] T025 [US1] OAM DMA を `src/core/bus.lisp` に追加する（FF46。160 バイトを 640 T サイクルかけて転送し、転送中は OAM の読み出しが 0xFF になる）
 - [ ] T026 [US1] dmg-acid2 のテストを `tests/suites/acid2.lisp` に書く。期待ハッシュとフレーム数は `~/Develop/ruxboy/Tests/Packages/Core/Acid2/Src/Main.rux` からそのまま移す。ハッシュが一致しない場合は、`dump-framebuffer-ppm` で画像を書き出し、参照画像（mattcurrie/dmg-acid2 リポジトリの `img/reference-dmg.png`）と目視で比べる。色の計算式の違いだけが原因なら、RuxBoy に合わせて直す。Mooneye の ppu テストも T022 のファイルに追加する

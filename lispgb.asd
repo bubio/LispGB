@@ -52,4 +52,5 @@
                (:file "unit/cpu-test")
                (:file "unit/timer-test")
                (:file "unit/mbc-test")
-               (:file "suites/blargg")))
+               (:file "suites/blargg")
+               (:file "unit/ppu-test")))
