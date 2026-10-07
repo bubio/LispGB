@@ -68,7 +68,7 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 - [X] T002 ASDF の定義を `lispgb.asd` に書く。システムは3つ: `lispgb/core`（`src/core/` を plan の順で `:serial t`）、`lispgb`（`lispgb/core` と `src/app/` に依存）、`lispgb/tests`（両方と `tests/` に依存）。外部の依存は書かない（research R5）
 - [X] T003 [P] `scripts/get_version.sh` を作る。`lispgb.asd` の `:version`（初期値 `"0.1.0"`）を標準出力に出す
 - [X] T004 [P] テスト ROM の取得スクリプト `scripts/fetch_test_roms.sh` を作る。`~/Develop/ruxboy/scripts/fetch_test_roms.sh` から、**取得元、コミットハッシュ、ROM の一覧をそのまま**移す（Blargg `cpu_instrs`（個別と統合）、`instr_timing`、`dmg_sound`。Mooneye の acceptance（timer / interrupts / ppu ほか）と emulator-only の mbc1 / mbc2 / mbc5。dmg-acid2 と cgb-acid2）。保存先は `tests/roms/`。再実行しても安全にする（取得済みならスキップ）
-- [ ] T005 [P] `LICENSE`（MIT。年は 2026、著作者名は RuxBoy の LICENSE と同じ表記）を作る
+- [X] T005 [P] `LICENSE`（MIT。年は 2026、著作者名は RuxBoy の LICENSE と同じ表記）を作る
 
 ---
 
