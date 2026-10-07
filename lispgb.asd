@@ -56,4 +56,5 @@
                (:file "unit/ppu-test")
                (:file "suites/mooneye")
                (:file "suites/acid2")
-               (:file "unit/apu-test")))
+               (:file "unit/apu-test")
+               (:file "unit/cgb-test")))
