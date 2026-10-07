@@ -104,7 +104,7 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 - [X] T016 [US1] 命令をマクロで生成し、256 + 256（CB）要素の関数ベクタを `src/core/opcodes.lisp` に作る。全命令の動作とサイクル数は `~/Develop/ruxboy/Packages/Core/Src/Cpu.rux` から移す。不正なオペコード（0xD3 など）を実行したら CPU を停止させる。`LD B,B`（0x40）で `debug-ld-b-b-hit` を立てる
 - [X] T017 [US1] T008 で作った `src/core/machine.lisp` の空の関数に中身を実装する。`make-machine (rom-bytes)`、`run-frame (machine)`（70224 ドット分実行する）、`machine-framebuffer`、`machine-serial-log`、`machine-cpu-registers`、`machine-ld-b-b-hit-p`、`machine-read-byte`（`set-buttons` は T037、`drain-audio` は T031 で実装する）
 - [X] T018 [US1] Blargg の CPU テストを `tests/suites/blargg.lisp` に書く（`cpu_instrs` の11個と統合版、`instr_timing`）。T011 のヘルパーを使う
-- [ ] T019 [US1] `scripts/bench.sh` を作り、`cpu_instrs.gb` をヘッドレスで 3000 フレーム実行して fps を表示する。結果を `docs/dev/performance.md` に記録する。この時点では PPU と APU のコストが入っていないので、目安は **400fps 以上**とする（最終判定の 180fps は T071 で行う）。400fps 未満なら、`sb-sprof` でプロファイルし、原因と対策を同じファイルに書いてから先に進む（憲法 III）
+- [X] T019 [US1] `scripts/bench.sh` を作り、`cpu_instrs.gb` をヘッドレスで 3000 フレーム実行して fps を表示する。結果を `docs/dev/performance.md` に記録する。この時点では PPU と APU のコストが入っていないので、目安は **400fps 以上**とする（最終判定の 180fps は T071 で行う）。400fps 未満なら、`sb-sprof` でプロファイルし、原因と対策を同じファイルに書いてから先に進む（憲法 III）
 
 ### 3-B. 割り込みとタイマー
 
