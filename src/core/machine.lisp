@@ -14,6 +14,9 @@
          (bus (make-bus :mode mode :rom rom-bytes :cart (make-cartridge rom-bytes header))))
     (setf (bus-if bus) 1)
     (ppu-write (bus-ppu bus) #xff40 #x91)
+    (apu-write (bus-apu bus) #xff26 #x80)
+    (apu-write (bus-apu bus) #xff24 #x77)
+    (apu-write (bus-apu bus) #xff25 #xf3)
     (%make-machine :cpu (make-cpu :mode mode) :bus bus :framebuffer (ppu-framebuffer (bus-ppu bus)))))
 
 (defun run-frame (machine)
@@ -37,4 +40,6 @@
 (defun set-buttons (machine button-set)
   (declare (ignore machine button-set)) (error "ジョイパッドは未実装です。"))
 (defun drain-audio (machine dst)
-  (declare (ignore machine dst)) (error "音声出力は未実装です。"))
+  (declare (optimize (safety 3)))
+  (check-type dst (simple-array (signed-byte 16) (*)))
+  (apu-drain (bus-apu (machine-bus machine)) dst))
