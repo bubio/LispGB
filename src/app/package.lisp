@@ -1,1 +1,3 @@
-;;; 実装は対応タスクで追加する。
+(defpackage #:lispgb
+  (:use #:cl)
+  (:export #:main))
