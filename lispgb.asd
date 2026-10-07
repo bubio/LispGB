@@ -45,4 +45,5 @@
   :depends-on ("lispgb/core" "lispgb")
   :pathname "tests/"
   :serial t
-  :components ((:file "framework")))
+  :components ((:file "framework")
+               (:file "unit/cartridge-test")))

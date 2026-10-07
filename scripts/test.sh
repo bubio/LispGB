@@ -6,7 +6,7 @@ mkdir -p build/fasl-safe
 exec sbcl --noinform --non-interactive \
   --eval '(pushnew :lispgb-safe *features*)' \
   --eval '(require :asdf)' \
-  --eval '(asdf:initialize-output-translations `(:output-translations (t ,(truename "build/fasl-safe/")) :ignore-inherited-configuration))' \
+  --eval '(asdf:initialize-output-translations `(:output-translations (,(merge-pathnames "**/*.*" (truename "./")) ,(merge-pathnames "**/*.*" (truename "build/fasl-safe/"))) :ignore-inherited-configuration))' \
   --eval '(asdf:load-asd (truename "lispgb.asd"))' \
   --eval '(asdf:load-system "lispgb/tests")' \
   --eval '(unless (directory "tests/roms/**/*.gb*") (format t "テスト ROM がないため ROM テストをスキップします。~%"))' \
