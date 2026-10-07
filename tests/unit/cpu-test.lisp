@@ -89,5 +89,3 @@
     (lispgb.core::cpu-step cpu bus)
     (lispgb.core::cpu-step cpu bus)
     (is (= #x3e (lispgb.core::cpu-a cpu)))))
-(dolist (name '(cpu-arithmetic cpu-inc-dec-daa cpu-pairs-stack cpu-rotates-cb cpu-branch-cycles cpu-interrupt-halt))
-  (register-pending name "T016"))
