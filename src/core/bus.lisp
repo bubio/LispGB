@@ -11,19 +11,24 @@
   (svbk 1 :type u8) (vbk 0 :type u8)
   (cycles 0 :type fixnum) (hw-cycles 0 :type fixnum)
   (double-speed nil :type boolean) (speed-switch-prepared nil :type boolean)
-  (timer (make-timer) :type timer) ppu apu joypad
+  (timer (make-timer) :type timer) (ppu (make-ppu) :type ppu) apu joypad
   (serial-log (make-array 0 :element-type 'u8 :adjustable t :fill-pointer 0)))
 
 ;; 周辺機器は各実装タスクでこの境界に接続する。
 (defun bus-device-read (bus address)
-  (if (<= #xff04 address #xff07) (timer-read (bus-timer bus) address)
-      (aref (bus-io bus) (- address #xff00))))
+  (cond ((<= #xff04 address #xff07) (timer-read (bus-timer bus) address))
+        ((and (<= #xff40 address #xff4b) (/= address #xff46)) (ppu-read (bus-ppu bus) address))
+        (t (aref (bus-io bus) (- address #xff00)))))
 (defun bus-device-write (bus address value)
-  (if (<= #xff04 address #xff07) (timer-write (bus-timer bus) address value)
-      (setf (aref (bus-io bus) (- address #xff00)) value)))
+  (cond ((<= #xff04 address #xff07) (timer-write (bus-timer bus) address value))
+        ((and (<= #xff40 address #xff4b) (/= address #xff46))
+         (when (ppu-write (bus-ppu bus) address value) (setf (bus-if bus) (logior 2 (bus-if bus)))))
+        (t (setf (aref (bus-io bus) (- address #xff00)) value))))
 (defun bus-tick (bus cycles)
   (when (timer-tick (bus-timer bus) cycles)
     (setf (bus-if bus) (logior 4 (bus-if bus))))
+  (setf (bus-if bus) (logior (bus-if bus)
+    (ppu-tick (bus-ppu bus) (if (bus-double-speed bus) (ash cycles -1) cycles) (bus-vram bus) (bus-oam bus))))
   (incf (bus-cycles bus) cycles)
   (incf (bus-hw-cycles bus) (if (bus-double-speed bus) (ash cycles -1) cycles)))
 

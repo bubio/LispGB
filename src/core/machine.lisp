@@ -13,7 +13,8 @@
          (mode (if (member (cartridge-header-cgb-flag header) '(#x80 #xc0)) :cgb :dmg))
          (bus (make-bus :mode mode :rom rom-bytes :cart (make-cartridge rom-bytes header))))
     (setf (bus-if bus) 1)
-    (%make-machine :cpu (make-cpu :mode mode) :bus bus)))
+    (ppu-write (bus-ppu bus) #xff40 #x91)
+    (%make-machine :cpu (make-cpu :mode mode) :bus bus :framebuffer (ppu-framebuffer (bus-ppu bus)))))
 
 (defun run-frame (machine)
   "累積目標を使い、命令境界で生じた端数を次のフレームへ引き継ぐ。"

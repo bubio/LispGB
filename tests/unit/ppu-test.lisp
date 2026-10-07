@@ -34,4 +34,3 @@
       (is (= #xffaaaaaa (aref pixels 0)))
       (is (= #xff555555 (aref pixels 1)))
       (is (= #xffffffff (aref pixels 2))))))
-(dolist (name '(ppu-mode-timing ppu-stat-edge ppu-tile-decode)) (register-pending name "T024"))
