@@ -1,1 +1,5 @@
-;;; 実装は対応タスクで追加する。
+(defpackage #:lispgb.core
+  (:use #:cl)
+  (:export #:make-machine #:run-frame #:machine-framebuffer #:machine-serial-log
+           #:machine-cpu-registers #:machine-ld-b-b-hit-p #:machine-read-byte
+           #:set-buttons #:drain-audio))

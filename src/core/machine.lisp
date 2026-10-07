@@ -1,1 +1,16 @@
-;;; 実装は対応タスクで追加する。
+(in-package #:lispgb.core)
+(declaim #.(core-optimize-spec))
+
+(macrolet ((define-unimplemented (name lambda-list)
+             `(defun ,name ,lambda-list
+                (declare (ignore ,@lambda-list))
+                (error "~A は未実装です。" ',name))))
+  (define-unimplemented make-machine (rom-bytes))
+  (define-unimplemented run-frame (machine))
+  (define-unimplemented machine-framebuffer (machine))
+  (define-unimplemented machine-serial-log (machine))
+  (define-unimplemented machine-cpu-registers (machine))
+  (define-unimplemented machine-ld-b-b-hit-p (machine))
+  (define-unimplemented machine-read-byte (machine address))
+  (define-unimplemented set-buttons (machine button-set))
+  (define-unimplemented drain-audio (machine dst)))
