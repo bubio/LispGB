@@ -22,3 +22,13 @@
     (lispgb.core::bus-write bus #xff01 65)
     (lispgb.core::bus-write bus #xff02 #x81)
     (is (equalp #(65) (lispgb.core::bus-serial-log bus)))))
+
+(deftest bus-oam-dma ()
+  (let ((bus (lispgb.core::make-bus)))
+    (dotimes (i 160) (lispgb.core::bus-write bus (+ #xc000 i) (logand i 255)))
+    (lispgb.core::bus-write bus #xff46 #xc0)
+    (lispgb.core::bus-tick bus 4)
+    (lispgb.core::bus-tick bus 4)
+    (is (= #xff (lispgb.core::bus-read bus #xfe00)))
+    (lispgb.core::bus-tick bus 636)
+    (dotimes (i 160) (is (= i (lispgb.core::bus-read bus (+ #xfe00 i)))))))
