@@ -17,8 +17,8 @@
     (:file "bus")
     (:file "cpu")
     (:file "opcodes")
-    (:file "savestate")
-    (:file "machine")))
+    (:file "machine")
+    (:file "savestate")))
 
 (asdf:defsystem "lispgb"
   :description "LispGB の SDL2 フロントエンド"
