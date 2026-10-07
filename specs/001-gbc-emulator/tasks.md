@@ -165,7 +165,7 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 
 - [X] T046 [P] [US2] セーブステートの単体テストを `tests/unit/savestate-test.lisp` に書く。(1) 保存してから数フレーム進め、復元すると、フレームバッファと全レジスタが保存時と一致する（SC-006: 100回繰り返す）。(2) マジック、バージョン、チェックサムが違うもの、長さが足りないものは拒否され、マシンが**一切変わらない**（スナップショットを取って比較する）。(3) リングバッファにゴミ値を入れてから復元すると、0 クリアされている（FR-013）。(4) `savestate-size` と実際に書いたバイト数が一致する
 - [X] T047 [US2] セーブステートを `src/core/savestate.lisp` に書く。形式は contracts/savestate-format.md のとおり（マジック `LGBS`、バージョン u32 = 1、グローバルチェックサム、data-model.md で SS が ○ の要素を記載の順に、リトルエンディアンで）。`save-state (machine) → octets`、`load-state (machine octets)`。検証はマジック → バージョン → チェックサム → サイズの順に行い、全部通過してから書き込む。失敗したら条件 `savestate-error`（理由のキーワード付き）を通知する
-- [ ] T048 [P] [US2] アトミックな書き込みを `src/app/fileio.lisp` に書く。`write-file-atomically (path octets)` は `<path>.tmp` に書いてから `rename` する。`read-file-octets (path)` も用意する
+- [X] T048 [P] [US2] アトミックな書き込みを `src/app/fileio.lisp` に書く。`write-file-atomically (path octets)` は `<path>.tmp` に書いてから `rename` する。`read-file-octets (path)` も用意する
 - [ ] T049 [P] [US2] パスの計算を `src/app/paths.lisp` に書く。ROM のパスから `.sav` と `.state` のパスを作る（拡張子を置き換える）
 - [ ] T050 [US2] セーブ RAM の永続化を `src/app/main.lisp` に組み込む。起動時に `.sav` を読み込む（サイズが RAM のサイズと一致しなければ読み込まず、警告を出し、既存のファイルを `<名前>.sav.bak` に退避する）。毎フレーム `ram-dirty` を確認し、最後の書き込みから 60 フレーム何も起きなければ保存する。終了時は必ず保存する（FR-010）。電池なしのカートリッジでは何もしない
 - [ ] T051 [US2] F1 / F3 を `src/app/main.lisp` に組み込む。F1 で `save-state` を `.state` にアトミックに書く。F3 で読み込んで `load-state` し、成功したら音声のキューをクリアする（`SDL_ClearQueuedAudio`）。失敗したら日本語で理由を標準エラー出力に出し、実行を続ける
