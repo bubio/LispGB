@@ -6,3 +6,11 @@
         (unless (= hash #x17a0f9970ac4d084)
           (dump-framebuffer-ppm machine (asdf:system-relative-pathname "lispgb" "build/dmg-acid2.ppm")))
         (is (= hash #x17a0f9970ac4d084) (format nil "実際のハッシュ: ~16,'0X" hash))))))
+
+(let ((path (asdf:system-relative-pathname "lispgb/tests" "tests/roms/acid2/cgb-acid2.gb")))
+  (when (probe-file path)
+    (deftest cgb-acid2 ()
+      (let* ((machine (run-rom path :max-frames 100)) (hash (framebuffer-fnv1a64 machine)))
+        (unless (= hash #x8c0a422078d38470)
+          (dump-framebuffer-ppm machine (asdf:system-relative-pathname "lispgb" "build/cgb-acid2.ppm")))
+        (is (= hash #x8c0a422078d38470) (format nil "実際のハッシュ: ~16,'0X" hash))))))

@@ -135,7 +135,7 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 
 - [X] T033 [P] [US1] CGB の単体テストを `tests/unit/cgb-test.lisp` に書く（KEY1 と STOP による倍速の切り替え、BCPS / OCPS の自動インクリメント、VRAM バンク 1 の BG 属性、GDMA の転送量、HBlank ごとの HDMA、DMG 専用 ROM で DMG 互換モードになること）
 - [X] T034 [US1] CGB の機能を追加する。PPU（`src/core/ppu.lisp`）には、カラーパレット RAM、BG 属性（バンク、パレット、反転、優先度）、BG とスプライトの優先順位、RGB555 → ARGB8888 の色変換（`~/Develop/ruxboy/Packages/Core/Src/Ppu.rux` と**同じ式**）を追加する。Bus（`src/core/bus.lisp`）には、倍速、HDMA / GDMA、SVBK / VBK、OPRI を追加する。CPU（`src/core/cpu.lisp`）には、STOP での倍速切り替えを追加する
-- [ ] T035 [US1] cgb-acid2 のテストを `tests/suites/acid2.lisp` に追加する（期待ハッシュは RuxBoy の Acid2 テストから）。ハッシュが一致しない場合は、T026 と同じ手順で、mattcurrie/cgb-acid2 リポジトリの `img/reference.png` と目視で比べる
+- [X] T035 [US1] cgb-acid2 のテストを `tests/suites/acid2.lisp` に追加する（期待ハッシュは RuxBoy の Acid2 テストから）。ハッシュが一致しない場合は、T026 と同じ手順で、mattcurrie/cgb-acid2 リポジトリの `img/reference.png` と目視で比べる
 
 ### 3-G. ジョイパッド
 
