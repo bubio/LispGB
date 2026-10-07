@@ -29,5 +29,12 @@
     (is (string= "/tmp/rom5.gb" (first next)))
     (is (= 1 (count "/tmp/rom5.gb" next :test #'string=)))
     (is (string= "/tmp/rom0.gb" (second next)))))
-(dolist (name '(config-parse config-location config-generate-defaults)) (register-pending name "T061"))
 (register-pending 'recent-order-and-limit "T062")
+
+(deftest config-cli-precedence ()
+  (let* ((base (lispgb::parse-config-text (format nil "scale=2~%shader=smooth~%volume=25~%")))
+         (result (lispgb::apply-cli-config base (lispgb::parse-args '("--scale" "3" "game.gb")))))
+    (is (= 3 (lispgb::app-config-scale result)))
+    (is (eq :smooth (lispgb::app-config-shader result)))
+    (is (= 25 (lispgb::app-config-volume result)))
+    (is (= 2 (lispgb::app-config-scale base)))))
