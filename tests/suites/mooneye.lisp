@@ -12,3 +12,5 @@
   ;; acceptance の全 ROM を再帰的に列挙する。
   (dolist (path (directory (merge-pathnames "**/*.gb" root)))
     (register-mooneye path)))
+(let ((root (asdf:system-relative-pathname "lispgb/tests" "tests/roms/mooneye/emulator-only/")))
+  (dolist (path (directory (merge-pathnames "**/*.gb" root))) (register-mooneye path)))

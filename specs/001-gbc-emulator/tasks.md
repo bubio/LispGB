@@ -123,7 +123,7 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 
 - [X] T027 [P] [US1] MBC の単体テストを `tests/unit/mbc-test.lisp` に書く（MBC1 のバンク 0 → 1 補正と上位ビットのモード、MBC2 の 4bit RAM とアドレスビット 8 による切り替え、MBC3 のバンク切り替えと RTC のラッチ、MBC5 の 9bit ROM バンク、RAM 無効時の読み出しが 0xFF）
 - [X] T028 [US1] MBC を `src/core/mbc.lisp` に書く。data-model.md の Cartridge と Mbc（フラットな1つの構造体）。`~/Develop/ruxboy/Packages/Core/Src/Mbc.rux` から移す。外部 RAM に書き込んだら `ram-dirty` を立てる。MBC3 の RTC は `mbc-sync-wall-clock (cart unix-seconds)` で前回からの経過秒だけ進める（コアは時計を直接読まない。憲法 IV）
-- [ ] T029 [US1] Mooneye の emulator-only/mbc1、mbc2、mbc5 のテストを `tests/suites/mooneye.lisp` に追加する
+- [X] T029 [US1] Mooneye の emulator-only/mbc1、mbc2、mbc5 のテストを `tests/suites/mooneye.lisp` に追加する
 
 ### 3-E. APU
 
