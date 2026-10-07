@@ -173,4 +173,9 @@ else
 	fi
 fi
 
+# 参照実装の .gb 名を残し、利用ガイドの .gbc 名でも起動できるようにする。
+if [ -f "$CGB_ACID2_ROM_PATH" ] && [ ! -e "$ROMS_DIR/acid2/cgb-acid2.gbc" ]; then
+    cp "$CGB_ACID2_ROM_PATH" "$ROMS_DIR/acid2/cgb-acid2.gbc"
+fi
+
 echo "fetch_test_roms.sh: 完了。配置先: $ROMS_DIR"

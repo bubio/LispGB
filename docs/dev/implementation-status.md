@@ -18,3 +18,9 @@ ROM は Git 管理対象外。取得元と固定バージョンは `scripts/fetc
 単体テストと既存全スイートが合格。DMA の転送時間は参照実装の 8 T から
 32ドット（通常8 Mサイクル、倍速16 Mサイクル）へ修正した。
 根拠: [Pan Docs の転送時間](https://gbdev.io/pandocs/CGB_Registers.html#transfer-timings)。
+
+## T045: MVP 検証
+
+T001〜T045 完了。全テスト合格（既知3件を除く）。単体実行ファイルをビルドし、
+X11 の実ウィンドウで cgb-acid2 を表示、Esc による終了コード0を確認した。
+SDL2 の音声出力とデバイス不在時の無音継続も検証済み。

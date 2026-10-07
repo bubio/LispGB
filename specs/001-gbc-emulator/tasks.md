@@ -151,7 +151,7 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 - [X] T042 [US1] 入力を `src/app/input.lisp` に書く。固定のキー割り当て（矢印 = 十字キー、Z = B、X = A、Enter = Start、右Shift = Select）でボタン集合を更新する。F1 / F3 / Esc はイベントとして返す（F1 / F3 の処理は US2 で実装する）
 - [X] T043 [US1] エントリポイントとメインループを `src/app/main.lisp` に書く。手順: 引数から ROM のパスを受け取る（この段階では位置引数1つだけ。オプションは US3 で追加する）→ ROM を読む → `make-machine` → SDL2 を読み込む → イベント処理 → `set-buttons` → `mbc-sync-wall-clock`（毎フレーム）→ `run-frame` → 描画 → 音声 → ペース配分。Esc とウィンドウの close で終わる。エラーは日本語で標準エラー出力に出し、contracts/cli.md の終了コード（実行時エラーは 1、使い方の誤りは 2）で終わる（FR-020）
 - [X] T044 [US1] `scripts/build.sh` を作る。SBCL で `lispgb` をロードし、`save-lisp-and-die "build/lispgb" :executable t :toplevel #'lispgb:main` で実行ファイルを作る。`:sb-core-compression` が `*features*` にあるときだけ `:compression t` を付ける（research R4）。fasl の置き場所は `build/fasl/` とし、テスト用の `build/fasl-safe/`（T007）と混ぜない
-- [ ] T045 [US1] 動作を確認する。`sh scripts/test.sh` で US1 のテストが全部合格すること（既知の3件を除く）。`build/lispgb tests/roms/acid2/cgb-acid2.gbc` でウィンドウに表示され、Esc で終了すること。`scripts/bench.sh` の結果を `docs/dev/performance.md` に追記する
+- [X] T045 [US1] 動作を確認する。`sh scripts/test.sh` で US1 のテストが全部合格すること（既知の3件を除く）。`build/lispgb tests/roms/acid2/cgb-acid2.gbc` でウィンドウに表示され、Esc で終了すること。`scripts/bench.sh` の結果を `docs/dev/performance.md` に追記する
 
 **Checkpoint**: US1 が単独で動く（MVP）
 
