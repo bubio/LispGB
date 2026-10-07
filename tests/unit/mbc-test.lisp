@@ -59,4 +59,3 @@
     (is (= 1 (lispgb.core::mbc-read cart #x4001)))
     (lispgb.core::mbc-write cart #x3000 0)
     (is (= 0 (lispgb.core::mbc-read cart #x4001)))))
-(dolist (name '(mbc1-banks mbc2-nibbles mbc3-rtc mbc5-nine-bit-bank)) (register-pending name "T028"))

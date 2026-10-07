@@ -11,7 +11,7 @@
   "検証した ROM から独立したマシンを作る。ROM は呼び出し側と共有する。"
   (let* ((header (parse-cartridge-header rom-bytes))
          (mode (if (member (cartridge-header-cgb-flag header) '(#x80 #xc0)) :cgb :dmg))
-         (bus (make-bus :mode mode :rom rom-bytes)))
+         (bus (make-bus :mode mode :rom rom-bytes :cart (make-cartridge rom-bytes header))))
     (setf (bus-if bus) 1)
     (%make-machine :cpu (make-cpu :mode mode) :bus bus)))
 
