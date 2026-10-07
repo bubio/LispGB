@@ -129,7 +129,7 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 
 - [X] T030 [P] [US1] APU の単体テストを `tests/unit/apu-test.lisp` に書く（NR52 を off にするとレジスタがクリアされること、長さカウンタ、エンベロープ、スイープのオーバーフローでチャンネルが無効になること、波形 RAM の読み書き、出力が 48kHz でサンプル数が期待どおりになること）
 - [X] T031 [US1] APU を `src/core/apu.lisp` に書く。data-model.md の Apu（ch1〜ch4、フレームシーケンサー、NR50 / NR51、ステレオのリングバッファ）。`~/Develop/ruxboy/Packages/Core/Src/Apu.rux` から移すが、出力のサンプルレートは **48,000Hz**（RuxBoy は 22,050Hz）。`drain-audio (machine dst)` を `machine.lisp` から export する
-- [ ] T032 [US1] Blargg `dmg_sound` のテスト（`$A000` 方式）を `tests/suites/blargg.lisp` に追加する
+- [X] T032 [US1] Blargg `dmg_sound` のテスト（`$A000` 方式）を `tests/suites/blargg.lisp` に追加する
 
 ### 3-F. CGB の機能
 

@@ -11,3 +11,14 @@
                        (directory (merge-pathnames "cpu_instrs/cpu_instrs.gb" root))
                        (directory (merge-pathnames "instr_timing/instr_timing.gb" root))))
     (register-blargg-serial path)))
+(let ((root (asdf:system-relative-pathname "lispgb/tests" "tests/roms/blargg/dmg_sound/rom_singles/")))
+  (dolist (path (directory (merge-pathnames "*.gb" root)))
+    (let ((path path) (name (intern (string-upcase (format nil "BLARGG/SOUND/~A" (pathname-name path))) :lispgb.tests)))
+      (setf (gethash name *tests*)
+            (lambda ()
+              (multiple-value-bind (result machine) (blargg-memory-result path :max-frames 3600)
+                (is (eq result :pass)
+                    (format nil "~A: ~A" result
+                            (coerce (loop for address from #xa004 below #xbfff
+                                          for byte = (lispgb.core:machine-read-byte machine address)
+                                          until (zerop byte) collect (code-char byte)) 'string)))))))))
