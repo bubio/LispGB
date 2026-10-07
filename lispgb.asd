@@ -60,4 +60,5 @@
                (:file "unit/cgb-test")
                (:file "unit/joypad-test")
                (:file "unit/savestate-test")
-               (:file "unit/bmp-test")))
+               (:file "unit/bmp-test")
+               (:file "unit/cli-test")))
