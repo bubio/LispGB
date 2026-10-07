@@ -11,3 +11,10 @@ Mooneye の取得済み ROM が合格（既知のタイミング不合格3件を
 CGB、入力、SDL2 フロントエンド、保存機能、CLI は後続タスクで実装する。
 
 ROM は Git 管理対象外。取得元と固定バージョンは `scripts/fetch_test_roms.sh` に記載。
+
+## T034: CGB
+
+倍速切り替え、RGB555 パレット、BG 属性、CGB のスプライト優先度、GDMA / HDMA を追加。
+単体テストと既存全スイートが合格。DMA の転送時間は参照実装の 8 T から
+32ドット（通常8 Mサイクル、倍速16 Mサイクル）へ修正した。
+根拠: [Pan Docs の転送時間](https://gbdev.io/pandocs/CGB_Registers.html#transfer-timings)。

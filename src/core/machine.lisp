@@ -12,7 +12,7 @@
   (let* ((header (parse-cartridge-header rom-bytes))
          (mode (if (member (cartridge-header-cgb-flag header) '(#x80 #xc0)) :cgb :dmg))
          (bus (make-bus :mode mode :rom rom-bytes :cart (make-cartridge rom-bytes header))))
-    (setf (bus-if bus) 1)
+    (setf (bus-if bus) 1 (ppu-cgb (bus-ppu bus)) (eq mode :cgb))
     (ppu-write (bus-ppu bus) #xff40 #x91)
     (apu-write (bus-apu bus) #xff26 #x80)
     (apu-write (bus-apu bus) #xff24 #x77)

@@ -87,7 +87,7 @@
                 (1 '(let ((address (cpu-fetch16 cpu bus)))
                       (cpu-write cpu bus address (wrap8 (cpu-sp cpu)))
                       (cpu-write cpu bus (wrap16 (1+ address)) (ldb (byte 8 8) (cpu-sp cpu)))))
-                (2 '(setf (cpu-pc cpu) (wrap16 (1+ (cpu-pc cpu)))))
+                (2 '(cpu-stop cpu bus))
                 (otherwise `(let ((offset (cpu-fetch8 cpu bus)))
                               (when ,(if (= row 3) t (condition-form (- row 4)))
                                 (setf (cpu-pc cpu) (wrap16 (+ (cpu-pc cpu) (signed8 offset))))

@@ -86,3 +86,11 @@
          (when (= opcode #x40) (setf (cpu-debug-ld-b-b-hit cpu) t))
          (funcall (aref *opcodes* opcode) cpu bus))))
     (- (cpu-cycles cpu) start)))
+
+(defun cpu-stop (cpu bus)
+  "STOP のパディングを読み飛ばし、準備済みなら CGB のクロックを切り替える。"
+  (setf (cpu-pc cpu) (wrap16 (1+ (cpu-pc cpu))))
+  (when (and (eq (bus-mode bus) :cgb) (bus-speed-switch-prepared bus))
+    (bus-write bus #xff04 0)
+    (setf (bus-double-speed bus) (not (bus-double-speed bus))
+          (bus-speed-switch-prepared bus) nil)))
