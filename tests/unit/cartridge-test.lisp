@@ -56,6 +56,3 @@
         (is (= #x80 (lispgb.core::cartridge-header-cgb-flag header)))
         (is (= #x1234 (lispgb.core::cartridge-header-global-checksum header)))))
     (is warned)))
-
-(dolist (name '(cartridge-types cartridge-invalid cartridge-checksum))
-  (register-pending name "T009"))
