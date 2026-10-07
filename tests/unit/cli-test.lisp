@@ -15,4 +15,4 @@
                   ("--headless" "x") ("--frames" "0" "--headless" "x") ("--frames" "2" "x")
                   ("--shader" "blur" "x") ("x" "y") ("--screenshot")))
     (is (signals-condition-p 'lispgb::usage-error (lambda () (lispgb::parse-args args))))))
-(register-pending 'cli-all-options "T060")
+
