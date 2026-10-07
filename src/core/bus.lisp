@@ -11,13 +11,19 @@
   (svbk 1 :type u8) (vbk 0 :type u8)
   (cycles 0 :type fixnum) (hw-cycles 0 :type fixnum)
   (double-speed nil :type boolean) (speed-switch-prepared nil :type boolean)
-  timer ppu apu joypad
+  (timer (make-timer) :type timer) ppu apu joypad
   (serial-log (make-array 0 :element-type 'u8 :adjustable t :fill-pointer 0)))
 
 ;; 周辺機器は各実装タスクでこの境界に接続する。
-(defun bus-device-read (bus address) (aref (bus-io bus) (- address #xff00)))
-(defun bus-device-write (bus address value) (setf (aref (bus-io bus) (- address #xff00)) value))
+(defun bus-device-read (bus address)
+  (if (<= #xff04 address #xff07) (timer-read (bus-timer bus) address)
+      (aref (bus-io bus) (- address #xff00))))
+(defun bus-device-write (bus address value)
+  (if (<= #xff04 address #xff07) (timer-write (bus-timer bus) address value)
+      (setf (aref (bus-io bus) (- address #xff00)) value)))
 (defun bus-tick (bus cycles)
+  (when (timer-tick (bus-timer bus) cycles)
+    (setf (bus-if bus) (logior 4 (bus-if bus))))
   (incf (bus-cycles bus) cycles)
   (incf (bus-hw-cycles bus) (if (bus-double-speed bus) (ash cycles -1) cycles)))
 

@@ -49,5 +49,3 @@
     (lispgb.core::bus-tick bus 4)
     (is (= 3 (lispgb.core::bus-read bus #xff05)))
     (is (= 0 (lispgb.core::bus-if bus)))))
-(dolist (name '(timer-divider-and-frequency timer-falling-edge timer-overflow timer-cancel-reload))
-  (register-pending name "T021"))
