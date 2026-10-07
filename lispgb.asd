@@ -47,4 +47,5 @@
   :serial t
   :components ((:file "framework")
                (:file "unit/cartridge-test")
-               (:file "suites/harness")))
+               (:file "suites/harness")
+               (:file "unit/bus-test")))

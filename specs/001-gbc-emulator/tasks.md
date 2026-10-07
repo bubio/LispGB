@@ -98,7 +98,7 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 ### 3-A. メモリバスと CPU
 
 - [ ] T012 [US1] Bus の構造体とメモリマップを `src/core/bus.lisp` に書く。data-model.md の Bus（WRAM 32KiB と SVBK、VRAM 16KiB と VBK、OAM、HRAM、IO 128B、IE / IF）を持つ。`bus-read` と `bus-write` で 0x0000〜0xFFFF をカートリッジ、VRAM、外部 RAM、WRAM、エコー領域、OAM、使用不可領域、IO、HRAM、IE に振り分ける。IO の書き込みは Timer、PPU、APU、Joypad の関数に振り分ける（この時点では空の関数でよい）。シリアル（SB / SC）は、SC に 0x81 が書かれたら SB を `serial-log` に追加する（FR-008）
-- [ ] T013 [P] [US1] Bus の単体テストを `tests/unit/bus-test.lisp` に書く（エコー領域、WRAM / VRAM のバンク切り替え、使用不可領域の読み出し値、シリアルログ）
+- [X] T013 [P] [US1] Bus の単体テストを `tests/unit/bus-test.lisp` に書く（エコー領域、WRAM / VRAM のバンク切り替え、使用不可領域の読み出し値、シリアルログ）
 - [ ] T014 [P] [US1] CPU の単体テストを `tests/unit/cpu-test.lisp` に書く（主要命令のフラグ計算: ADD / ADC / SUB / SBC / DAA / INC / DEC / ADD HL / ADD SP,e8 / ローテート / CB 命令。PUSH / POP AF で F の下位4bit が 0 になること。条件分岐の T サイクル数）
 - [ ] T015 [US1] CPU の状態と実行の枠組みを `src/core/cpu.lisp` に書く。data-model.md の Cpu（a〜l、sp、pc、ime、ime-pending、halted、halt-bug、stopped、cycles）。BIOS なしで起動した直後のレジスタ値（CGB モードと DMG モードの両方）は `~/Develop/ruxboy/Packages/Core/Src/Cpu.rux` から移す。`cpu-step` は割り込みを処理し（優先順は VBlank > STAT > Timer > Serial > Joypad、20 T サイクル）、HALT と HALT バグを扱い、関数ベクタで命令を実行する。メモリアクセスごとに4 T サイクル進める `tick` フックで、Timer / PPU / APU / DMA を進める（Mooneye の timing テストに必要）
 - [ ] T016 [US1] 命令をマクロで生成し、256 + 256（CB）要素の関数ベクタを `src/core/opcodes.lisp` に作る。全命令の動作とサイクル数は `~/Develop/ruxboy/Packages/Core/Src/Cpu.rux` から移す。不正なオペコード（0xD3 など）を実行したら CPU を停止させる。`LD B,B`（0x40）で `debug-ld-b-b-hit` を立てる
