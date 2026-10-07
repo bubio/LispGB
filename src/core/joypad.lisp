@@ -1,1 +1,21 @@
-;;; 実装は対応タスクで追加する。
+(in-package #:lispgb.core)
+(declaim #.(core-optimize-spec))
+
+(defstruct joypad
+  (selection #x30 :type u8) (pressed 0 :type u8))
+(defun joypad-read (joypad)
+  (let ((low #xf) (pressed (joypad-pressed joypad)))
+    (unless (logbitp 4 (joypad-selection joypad)) (setf low (logand low (lognot pressed))))
+    (unless (logbitp 5 (joypad-selection joypad)) (setf low (logand low (lognot (ash pressed -4)))))
+    (logior #xc0 (joypad-selection joypad) low)))
+(defun joypad-update (joypad &key (selection (joypad-selection joypad)) (pressed (joypad-pressed joypad)))
+  "選択された入力線の立ち下がりがあれば割り込みを要求する。"
+  (let ((before (joypad-read joypad)))
+    (setf (joypad-selection joypad) (logand #x30 selection) (joypad-pressed joypad) pressed)
+    (plusp (logand #xf before (lognot (joypad-read joypad))))))
+(defun button-mask (buttons)
+  (let ((mask 0))
+    (dolist (button buttons mask)
+      (let ((index (position button '(:right :left :up :down :a :b :select :start))))
+        (unless index (error "不明なボタン: ~S" button))
+        (setf mask (logior mask (ash 1 index)))))))

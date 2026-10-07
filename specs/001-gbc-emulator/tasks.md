@@ -140,7 +140,7 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 ### 3-G. ジョイパッド
 
 - [X] T036 [P] [US1] ジョイパッドの単体テストを `tests/unit/joypad-test.lisp` に書く（P14 / P15 の選択による読み出し、押下の瞬間だけ IF の bit4 が立つこと）
-- [ ] T037 [US1] ジョイパッドを `src/core/joypad.lisp` に書き、FF00 を Bus に配線する。`set-buttons (machine button-set)` を `machine.lisp` から export する。ボタンはキーワードのリスト（`:right :left :up :down :a :b :select :start`）
+- [X] T037 [US1] ジョイパッドを `src/core/joypad.lisp` に書き、FF00 を Bus に配線する。`set-buttons (machine button-set)` を `machine.lisp` から export する。ボタンはキーワードのリスト（`:right :left :up :down :a :b :select :start`）
 
 ### 3-H. フロントエンド（最小限のプレイ）
 

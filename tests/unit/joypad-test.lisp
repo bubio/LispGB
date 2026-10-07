@@ -22,4 +22,4 @@
     (is (= 0 (lispgb.core::bus-if bus)))
     (lispgb.core:set-buttons machine '(:start))
     (is (logbitp 4 (lispgb.core::bus-if bus)))))
-(register-pending 'joypad-selection-and-edge "T037")
+
