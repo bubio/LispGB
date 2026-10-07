@@ -55,4 +55,5 @@
                (:file "suites/blargg")
                (:file "unit/ppu-test")
                (:file "suites/mooneye")
-               (:file "suites/acid2")))
+               (:file "suites/acid2")
+               (:file "unit/apu-test")))
