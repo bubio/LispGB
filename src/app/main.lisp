@@ -69,10 +69,11 @@
     (update-save-ram persistence machine))
   (when (cli-options-screenshot options)
     (write-bmp (cli-options-screenshot options) (lispgb.core:machine-framebuffer machine) 160 144)))
-(defun execute-options (options)
+(defun execute-options (options &key directory)
   (let* ((rom-path (cli-options-rom options))
          (machine (lispgb.core:make-machine (read-file-octets rom-path)))
          (persistence (open-persistence machine rom-path)))
+    (remember-rom directory rom-path)
     (unwind-protect
         (if (cli-options-headless options) (run-headless machine options persistence)
             (play-machine machine :persistence persistence :rom-path rom-path))
@@ -80,6 +81,12 @@
 (defun main ()
   (uiop:quit
    (handler-case
-       (progn (execute-options (parse-args (uiop:command-line-arguments))) 0)
+       (let ((options (parse-args (uiop:command-line-arguments))))
+         (multiple-value-bind (config directory) (load-config)
+           (declare (ignore config))
+           (if (cli-options-recent options)
+               (dolist (path (read-recent directory)) (format t "~A~%" path))
+               (execute-options options :directory directory)))
+         0)
      (usage-error (condition) (format *error-output* "~A~%" condition) (print-help *error-output*) 2)
      (error (condition) (format *error-output* "実行エラー: ~A~%" condition) 1))))

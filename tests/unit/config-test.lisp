@@ -29,7 +29,7 @@
     (is (string= "/tmp/rom5.gb" (first next)))
     (is (= 1 (count "/tmp/rom5.gb" next :test #'string=)))
     (is (string= "/tmp/rom0.gb" (second next)))))
-(register-pending 'recent-order-and-limit "T062")
+
 
 (deftest config-cli-precedence ()
   (let* ((base (lispgb::parse-config-text (format nil "scale=2~%shader=smooth~%volume=25~%")))
@@ -38,3 +38,15 @@
     (is (eq :smooth (lispgb::app-config-shader result)))
     (is (= 25 (lispgb::app-config-volume result)))
     (is (= 2 (lispgb::app-config-scale base)))))
+
+(deftest recent-file-roundtrip ()
+  (let* ((directory (asdf:system-relative-pathname "lispgb" "build/test-config/"))
+         (path (merge-pathnames "recent.txt" directory))
+         (rom (asdf:system-relative-pathname "lispgb" "lispgb.asd")))
+    (ensure-directories-exist path)
+    (unwind-protect
+        (progn
+          (lispgb::remember-rom directory rom)
+          (lispgb::remember-rom directory rom)
+          (is (equal (list (namestring (truename rom))) (lispgb::read-recent directory))))
+      (when (probe-file path) (delete-file path)))))

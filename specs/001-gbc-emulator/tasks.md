@@ -201,7 +201,7 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 - [X] T059 [P] [US3] 設定ファイルと一覧の単体テストを `tests/unit/config-test.lisp` に書く（既定値での生成、コメントと空白の扱い、未知の key と不正な値の無視、`XDG_CONFIG_HOME` が空のときの `~/.config`、一覧の先頭への移動・重複の除去・10件での切り詰め）
 - [X] T060 [US3] CLI の解析を `src/app/cli.lisp` に書く。`parse-args (list) → cli-options` は、contracts/cli.md のオプション表のとおり。使い方の誤りは条件 `usage-error` にする。`--help` の文言は日本語で、RuxBoy の README の「使い方」と同じ構成にする。T055 の仮の解析をこれに置き換える
 - [X] T061 [US3] 設定ファイルを `src/app/config.lisp` に書く。contracts/config-format.md のとおり（置き場所は `$XDG_CONFIG_HOME/LispGB/config.txt`、未設定または空なら `~/.config/LispGB/config.txt`。key は scale、fullscreen、shader、volume。ファイルがなければ既定値で生成し、ディレクトリを作れなければ警告を出して既定値で続ける）。優先順位は CLI > 設定ファイル > 既定値
-- [ ] T062 [US3] 最近使った ROM の一覧を `src/app/recent.lisp` に書く（`recent.txt`、絶対パス、新しい順、重複なし、最大10件、アトミックな書き込み）。`--recent` で表示して終了し、ROM を起動するたびに更新する
+- [X] T062 [US3] 最近使った ROM の一覧を `src/app/recent.lisp` に書く（`recent.txt`、絶対パス、新しい順、重複なし、最大10件、アトミックな書き込み）。`--recent` で表示して終了し、ROM を起動するたびに更新する
 - [ ] T063 [US3] 表示の設定を `src/app/video.lisp` に反映する。`--scale`（ウィンドウのサイズ）、`--fullscreen`（`SDL_WINDOW_FULLSCREEN_DESKTOP` と論理サイズ 160×144）、`--shader`（`SDL_HINT_RENDER_SCALE_QUALITY` を `"0"` / `"1"` にしてからテクスチャを作る）。`volume` は `src/app/audio.lisp` でサンプルに掛ける
 - [ ] T064 [US3] `--version`（`LispGB <version>`。バージョンは `lispgb.asd` から取得し、ビルド時に埋め込む）と `--help` を `src/app/main.lisp` に組み込む
 - [ ] T065 [US3] quickstart.md の手順6で確認する
