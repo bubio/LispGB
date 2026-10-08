@@ -1,5 +1,7 @@
 (in-package #:lispgb)
 
+(defparameter +version+ #.(asdf:component-version (asdf:find-system "lispgb")))
+
 (defun sync-rtc (machine)
   (lispgb.core::mbc-sync-wall-clock (lispgb.core::bus-cart (lispgb.core::machine-bus machine))
                                   (- (get-universal-time) 2208988800)))
@@ -82,10 +84,12 @@
   (uiop:quit
    (handler-case
        (let ((options (parse-args (uiop:command-line-arguments))))
-         (multiple-value-bind (config directory) (load-config)
-           (if (cli-options-recent options)
-               (dolist (path (read-recent directory)) (format t "~A~%" path))
-               (execute-options options :directory directory :config (apply-cli-config config options))))
+         (cond ((cli-options-help options) (print-help))
+               ((cli-options-version options) (format t "LispGB ~A~%" +version+))
+               (t (multiple-value-bind (config directory) (load-config)
+                    (if (cli-options-recent options)
+                        (dolist (path (read-recent directory)) (format t "~A~%" path))
+                        (execute-options options :directory directory :config (apply-cli-config config options))))))
          0)
      (usage-error (condition) (format *error-output* "~A~%" condition) (print-help *error-output*) 2)
      (error (condition) (format *error-output* "実行エラー: ~A~%" condition) 1))))

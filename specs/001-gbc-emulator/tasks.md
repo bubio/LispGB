@@ -203,7 +203,7 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 - [X] T061 [US3] 設定ファイルを `src/app/config.lisp` に書く。contracts/config-format.md のとおり（置き場所は `$XDG_CONFIG_HOME/LispGB/config.txt`、未設定または空なら `~/.config/LispGB/config.txt`。key は scale、fullscreen、shader、volume。ファイルがなければ既定値で生成し、ディレクトリを作れなければ警告を出して既定値で続ける）。優先順位は CLI > 設定ファイル > 既定値
 - [X] T062 [US3] 最近使った ROM の一覧を `src/app/recent.lisp` に書く（`recent.txt`、絶対パス、新しい順、重複なし、最大10件、アトミックな書き込み）。`--recent` で表示して終了し、ROM を起動するたびに更新する
 - [X] T063 [US3] 表示の設定を `src/app/video.lisp` に反映する。`--scale`（ウィンドウのサイズ）、`--fullscreen`（`SDL_WINDOW_FULLSCREEN_DESKTOP` と論理サイズ 160×144）、`--shader`（`SDL_HINT_RENDER_SCALE_QUALITY` を `"0"` / `"1"` にしてからテクスチャを作る）。`volume` は `src/app/audio.lisp` でサンプルに掛ける
-- [ ] T064 [US3] `--version`（`LispGB <version>`。バージョンは `lispgb.asd` から取得し、ビルド時に埋め込む）と `--help` を `src/app/main.lisp` に組み込む
+- [X] T064 [US3] `--version`（`LispGB <version>`。バージョンは `lispgb.asd` から取得し、ビルド時に埋め込む）と `--help` を `src/app/main.lisp` に組み込む
 - [ ] T065 [US3] quickstart.md の手順6で確認する
 
 **Checkpoint**: すべてのユーザーストーリーが動く
