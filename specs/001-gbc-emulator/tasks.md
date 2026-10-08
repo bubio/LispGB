@@ -215,7 +215,7 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 **Purpose**: 配布、CI / CD、ドキュメント、最終確認
 
 - [X] T066 [P] `scripts/package_zip.sh` を作る。`build/lispgb`、`README.md`、`README.ja.md`、`LICENSE` を `dist/LispGB-<version>-linux-arm64.zip` にまとめる（FR-024）
-- [ ] T067 [P] CI を `.github/workflows/ci.yml` に書く。`ubuntu-24.04-arm` で `apt install sbcl libsdl2-dev` → `scripts/fetch_test_roms.sh` → `scripts/test.sh` → `scripts/build.sh` を、ローカルと同じスクリプトで実行する（FR-023）。ビルド後に、CI 上（Ubuntu 24.04）で `./build/lispgb --version` と `./build/lispgb --headless --frames 120 --screenshot out.bmp tests/roms/acid2/cgb-acid2.gbc` を実行し、実行ファイル自体が 24.04 の glibc と SBCL 2.3 系で動くことを確かめる。**プッシュはしない**（コミットはする）
+- [X] T067 [P] CI を `.github/workflows/ci.yml` に書く。`ubuntu-24.04-arm` で `apt install sbcl libsdl2-dev` → `scripts/fetch_test_roms.sh` → `scripts/test.sh` → `scripts/build.sh` を、ローカルと同じスクリプトで実行する（FR-023）。ビルド後に、CI 上（Ubuntu 24.04）で `./build/lispgb --version` と `./build/lispgb --headless --frames 120 --screenshot out.bmp tests/roms/acid2/cgb-acid2.gbc` を実行し、実行ファイル自体が 24.04 の glibc と SBCL 2.3 系で動くことを確かめる。**プッシュはしない**（コミットはする）
 - [ ] T068 [P] リリースを `.github/workflows/release.yml` に書く。`v*` タグで CI と同じ手順を実行し、`scripts/package_zip.sh` で作った zip を GitHub Releases に上げる
 - [X] T069 [P] 利用者向けの README を `README.md`（英語）と `README.ja.md`（日本語）に書く。構成は RuxBoy の README に合わせる（概要、現状、対応プラットフォーム、インストール（`sudo apt install libsdl2-2.0-0`）、ビルド、使い方、キー操作、ライセンス）。**開発向けの内容は書かない**
 - [ ] T070 [P] 開発文書を `docs/dev/` に書く（`architecture.md`: コアとフロントエンドの分離と主な設計判断。`performance.md` と `known-failures.md` を最新にする）
