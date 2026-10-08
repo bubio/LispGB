@@ -217,7 +217,7 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 - [ ] T066 [P] `scripts/package_zip.sh` を作る。`build/lispgb`、`README.md`、`README.ja.md`、`LICENSE` を `dist/LispGB-<version>-linux-arm64.zip` にまとめる（FR-024）
 - [ ] T067 [P] CI を `.github/workflows/ci.yml` に書く。`ubuntu-24.04-arm` で `apt install sbcl libsdl2-dev` → `scripts/fetch_test_roms.sh` → `scripts/test.sh` → `scripts/build.sh` を、ローカルと同じスクリプトで実行する（FR-023）。ビルド後に、CI 上（Ubuntu 24.04）で `./build/lispgb --version` と `./build/lispgb --headless --frames 120 --screenshot out.bmp tests/roms/acid2/cgb-acid2.gbc` を実行し、実行ファイル自体が 24.04 の glibc と SBCL 2.3 系で動くことを確かめる。**プッシュはしない**（コミットはする）
 - [ ] T068 [P] リリースを `.github/workflows/release.yml` に書く。`v*` タグで CI と同じ手順を実行し、`scripts/package_zip.sh` で作った zip を GitHub Releases に上げる
-- [ ] T069 [P] 利用者向けの README を `README.md`（英語）と `README.ja.md`（日本語）に書く。構成は RuxBoy の README に合わせる（概要、現状、対応プラットフォーム、インストール（`sudo apt install libsdl2-2.0-0`）、ビルド、使い方、キー操作、ライセンス）。**開発向けの内容は書かない**
+- [X] T069 [P] 利用者向けの README を `README.md`（英語）と `README.ja.md`（日本語）に書く。構成は RuxBoy の README に合わせる（概要、現状、対応プラットフォーム、インストール（`sudo apt install libsdl2-2.0-0`）、ビルド、使い方、キー操作、ライセンス）。**開発向けの内容は書かない**
 - [ ] T070 [P] 開発文書を `docs/dev/` に書く（`architecture.md`: コアとフロントエンドの分離と主な設計判断。`performance.md` と `known-failures.md` を最新にする）
 - [ ] T071 性能を最終確認する。`scripts/bench.sh` でヘッドレス 180fps 以上（SC-004）。ウィンドウでの実行で音切れがないことと、起動から表示まで2秒以内（SC-005）であることを確かめる。結果を `docs/dev/performance.md` に記録する
 - [ ] T072 SBCL がない環境で実行ファイルが動くことを確かめる（`env -i PATH=/usr/bin:/bin ./build/lispgb --version`。`SBCL_HOME` などに依存していないこと）。さらに、Docker / Podman が使える場合は、`ubuntu:24.04`（arm64）のコンテナに `sbcl` と `libsdl2-2.0-0` を入れ、(1) ソースから `scripts/test.sh` が通ること（SBCL 2.3 系との互換性）、(2) 26.04 でビルドした `build/lispgb --version` が動くこと、の2点を確かめる。結果は `docs/dev/platforms.md` に記録する（どちらもできない場合は「未検証」と書く）
@@ -300,3 +300,5 @@ T020 → T021、T027 → T028 を T018 より前に実行する。T018 のスイ
 ASDF へ登録する。T018 の失敗を既知失敗として隠さず、全13本の合格を完了条件とする。
 
 T052 の検証コマンドは T055 のヘッドレス CLI を使用するため、T053〜T055 の後で実施する。
+
+配布 ZIP の T066 は README を含めるため、独立タスク T069 を先に完了する。
