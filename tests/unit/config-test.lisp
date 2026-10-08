@@ -50,3 +50,13 @@
           (lispgb::remember-rom directory rom)
           (is (equal (list (namestring (truename rom))) (lispgb::read-recent directory))))
       (when (probe-file path) (delete-file path)))))
+
+(deftest audio-volume ()
+  (let* ((machine (lispgb.core:make-machine (synthetic-rom)))
+         (apu (lispgb.core::bus-apu (lispgb.core::machine-bus machine)))
+         (audio (lispgb::make-audio)))
+    (setf (aref (lispgb.core::apu-ring apu) 0) 1000 (aref (lispgb.core::apu-ring apu) 1) -1000
+          (lispgb.core::apu-ring-count apu) 1)
+    (lispgb::output-audio audio machine 25)
+    (is (= 250 (aref (lispgb::audio-buffer audio) 0)))
+    (is (= -250 (aref (lispgb::audio-buffer audio) 1)))))

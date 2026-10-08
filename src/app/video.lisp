@@ -5,12 +5,13 @@
   (when (video-texture video) (sdl-destroy-texture (video-texture video)))
   (when (video-renderer video) (sdl-destroy-renderer (video-renderer video)))
   (when (video-window video) (sdl-destroy-window (video-window video))))
-(defun open-video (&key (scale 4) (title "LispGB"))
+(defun open-video (&key (scale 4) fullscreen (shader :nearest) (title "LispGB"))
   (let ((video (make-video)))
     (handler-case
         (progn
-          (sdl-set-hint "SDL_RENDER_SCALE_QUALITY" "0")
+          (sdl-set-hint "SDL_RENDER_SCALE_QUALITY" (if (eq shader :smooth) "1" "0"))
           (setf (video-window video) (check-sdl (sdl-create-window title #x2fff0000 #x2fff0000 (* 160 scale) (* 144 scale) 4)))
+          (when fullscreen (check-sdl (sdl-set-window-fullscreen (video-window video) #x1001)))
           (setf (video-renderer video) (check-sdl (sdl-create-renderer (video-window video) -1 0)))
           (check-sdl (sdl-render-set-logical-size (video-renderer video) 160 144))
           (setf (video-texture video) (check-sdl (sdl-create-texture (video-renderer video) #x16362004 1 160 144)))
