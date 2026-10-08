@@ -219,7 +219,7 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 - [X] T068 [P] リリースを `.github/workflows/release.yml` に書く。`v*` タグで CI と同じ手順を実行し、`scripts/package_zip.sh` で作った zip を GitHub Releases に上げる
 - [X] T069 [P] 利用者向けの README を `README.md`（英語）と `README.ja.md`（日本語）に書く。構成は RuxBoy の README に合わせる（概要、現状、対応プラットフォーム、インストール（`sudo apt install libsdl2-2.0-0`）、ビルド、使い方、キー操作、ライセンス）。**開発向けの内容は書かない**
 - [X] T070 [P] 開発文書を `docs/dev/` に書く（`architecture.md`: コアとフロントエンドの分離と主な設計判断。`performance.md` と `known-failures.md` を最新にする）
-- [ ] T071 性能を最終確認する。`scripts/bench.sh` でヘッドレス 180fps 以上（SC-004）。ウィンドウでの実行で音切れがないことと、起動から表示まで2秒以内（SC-005）であることを確かめる。結果を `docs/dev/performance.md` に記録する
+- [X] T071 性能を最終確認する。`scripts/bench.sh` でヘッドレス 180fps 以上（SC-004）。ウィンドウでの実行で音切れがないことと、起動から表示まで2秒以内（SC-005）であることを確かめる。結果を `docs/dev/performance.md` に記録する
 - [ ] T072 SBCL がない環境で実行ファイルが動くことを確かめる（`env -i PATH=/usr/bin:/bin ./build/lispgb --version`。`SBCL_HOME` などに依存していないこと）。さらに、Docker / Podman が使える場合は、`ubuntu:24.04`（arm64）のコンテナに `sbcl` と `libsdl2-2.0-0` を入れ、(1) ソースから `scripts/test.sh` が通ること（SBCL 2.3 系との互換性）、(2) 26.04 でビルドした `build/lispgb --version` が動くこと、の2点を確かめる。結果は `docs/dev/platforms.md` に記録する（どちらもできない場合は「未検証」と書く）
 - [ ] T073 quickstart.md の手順1〜8をすべて通して実行し、結果を報告する
 
