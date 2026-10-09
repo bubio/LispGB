@@ -53,6 +53,7 @@
                (:file "unit/timer-test")
                (:file "unit/mbc-test")
                (:file "suites/blargg")
+               (:file "unit/ppu-reference")
                (:file "unit/ppu-test")
                (:file "suites/mooneye")
                (:file "suites/acid2")

@@ -130,6 +130,7 @@
           (progn (walk-state restored (make-state-cursor :buffer bytes :reading t)) (validate-state-values restored))
         (error () (error 'savestate-error :reason :data)))
       (mbc-refresh-rom-windows (bus-cart (machine-bus restored)))
+      (ppu-refresh-palettes (bus-ppu (machine-bus restored)))
       (setf (bus-serial-log (machine-bus restored)) (bus-serial-log (machine-bus machine))
             (cpu-debug-ld-b-b-hit (machine-cpu restored)) (cpu-debug-ld-b-b-hit (machine-cpu machine))
             (cartridge-ram-dirty (bus-cart (machine-bus restored))) t
