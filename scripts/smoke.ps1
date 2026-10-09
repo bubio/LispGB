@@ -21,6 +21,9 @@ try {
     & ./build/lispgb.exe --headless tests/roms/acid2/cgb-acid2.gbc 2> build/smoke/usage.txt
     $ErrorActionPreference = 'Stop'
     if ($LASTEXITCODE -ne 2) { throw '使用方法の終了コードが不正です。' }
+    # 最後の外部コマンドも正常終了させ、CI に期待したエラーの終了コードを返さない。
+    $recent = (& ./build/lispgb.exe --recent) -join "`n"
+    if ($LASTEXITCODE -ne 0 -or $recent -notmatch 'cgb-acid2\.gbc') { throw '最近使った ROM の検証に失敗しました。' }
     Write-Output '実行ファイルの検証合格'
 } finally {
     foreach ($key in $keys) { [Environment]::SetEnvironmentVariable($key, $previous[$key], 'Process') }

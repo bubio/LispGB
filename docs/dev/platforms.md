@@ -129,3 +129,15 @@ powershell -ExecutionPolicy Bypass -File scripts/verify_windows_package.ps1
 ROM 取得のみ Git for Windows が必要。通常のビルド・テスト・配布は PowerShell と SBCL で行う。
 日本語を含む .ps1 は Windows PowerShell 5.1 で読める UTF-8 BOM 形式。
 SDL2 は [公式配布](https://libsdl.org/release/) の固定 ZIP を SHA256 で照合し、zlib ライセンスを同梱する。
+
+### Windows CI の終了コード修正（T083）
+
+[失敗した実行](https://github.com/bubio/LispGB/actions/runs/37887812343) は、ヘッドレス検証が
+合格と表示した後にステップが失敗した。最後に検証した意図的な使用方法エラーの
+終了コード2が LASTEXITCODE に残り、GitHub Actions の PowerShell ラッパーへ渡っていた。
+通常の powershell -File による確認ではこの値がプロセス終了コードへ伝わらなかった。
+
+エラーケースの後で --recent の正常終了と ROM 履歴を検証するようにした。
+PowerShell 5.1 / 7 の両方で、スクリプトをドットソースして LASTEXITCODE を返す
+CI と同じ呼び出しが終了コード0となることを確認した。実行ファイル欠落時は終了コード1。
+修正後の GitHub CI は未プッシュのため未実行。
