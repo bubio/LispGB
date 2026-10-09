@@ -46,6 +46,8 @@
   :pathname "tests/"
   :serial t
   :components ((:file "framework")
+               (:file "suites/rom-inventory")
+               (:file "unit/rom-inventory-test")
                (:file "unit/cartridge-test")
                (:file "suites/harness")
                (:file "unit/bus-test")

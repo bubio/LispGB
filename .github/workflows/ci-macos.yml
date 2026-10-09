@@ -7,6 +7,9 @@ name: CI macOS
     branches: [main]
   workflow_dispatch:
 
+env:
+  LISPGB_REQUIRE_TEST_ROMS: "1"
+
 permissions:
   contents: read
 

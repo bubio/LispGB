@@ -5,6 +5,9 @@ name: Release
     tags: ['v*']
   workflow_dispatch:
 
+env:
+  LISPGB_REQUIRE_TEST_ROMS: "1"
+
 permissions:
   contents: write
 

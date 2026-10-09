@@ -14,8 +14,7 @@
 (let ((mode (or (uiop:getenv "LISPGB_ACTION") "test")))
   (cond
     ((string= mode "test")
-     (unless (directory "tests/roms/**/*.gb*")
-       (format t "テスト ROM がないため ROM テストをスキップします。~%"))
+     (uiop:symbol-call :lispgb.tests :check-rom-inventory)
      (let ((failures (uiop:symbol-call :lispgb.tests :run-tests)))
        (when (zerop failures) (format t "全テスト合格~%"))
        (uiop:quit (if (zerop failures) 0 1))))

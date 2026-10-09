@@ -7,6 +7,7 @@ trap 'rm -rf "$LISPGB_FETCH_TEST"' EXIT HUP INT TERM
 mkdir -p "$LISPGB_FETCH_TEST/scripts" "$LISPGB_FETCH_TEST/tests" "$LISPGB_FETCH_TEST/bin"
 cp "$LISPGB_TEST_ROOT/scripts/fetch_test_roms.sh" "$LISPGB_FETCH_TEST/scripts/"
 cp -R "$LISPGB_TEST_ROOT/tests/roms" "$LISPGB_FETCH_TEST/tests/"
+cp "$LISPGB_TEST_ROOT/tests/rom-manifest.txt" "$LISPGB_FETCH_TEST/tests/"
 export LISPGB_FETCH_REFERENCE="$LISPGB_TEST_ROOT/tests/roms/acid2"
 export LISPGB_FETCH_LOG="$LISPGB_FETCH_TEST/requests"
 cat > "$LISPGB_FETCH_TEST/bin/curl" <<'MOCK'
@@ -20,6 +21,8 @@ while [ "$#" -gt 0 ]; do
     esac
 done
 printf '%s\n' "$url" >> "$LISPGB_FETCH_LOG"
+if [ "${LISPGB_FETCH_FAIL:-0}" = 1 ]; then exit 22; fi
+if [ "${LISPGB_FETCH_CORRUPT:-0}" = 1 ]; then printf broken > "$output"; exit 0; fi
 case "$url" in
     */dmg-acid2.gb) cp "$LISPGB_FETCH_REFERENCE/dmg-acid2.gb" "$output" ;;
     */cgb-acid2.gbc) cp "$LISPGB_FETCH_REFERENCE/cgb-acid2.gb" "$output" ;;
@@ -44,4 +47,16 @@ if sh "$LISPGB_FETCH_TEST/scripts/fetch_test_roms.sh" > "$LISPGB_FETCH_TEST/outp
     echo '改変された ROM を受理しました。' >&2; exit 1
 fi
 test "$(cat "$LISPGB_FETCH_TEST/tests/roms/acid2/dmg-acid2.gb")" = broken
-echo 'ROM 固定取得・照合の検証合格'
+# 取得失敗と転送中の改変は成功として終了せず、一時ファイルを残さない。
+rm "$LISPGB_FETCH_TEST/tests/roms/acid2/dmg-acid2.gb"
+for kind in fail corrupt; do
+    LISPGB_FETCH_FAIL=0; LISPGB_FETCH_CORRUPT=0
+    if [ "$kind" = fail ]; then LISPGB_FETCH_FAIL=1; else LISPGB_FETCH_CORRUPT=1; fi
+    export LISPGB_FETCH_FAIL LISPGB_FETCH_CORRUPT
+    if sh "$LISPGB_FETCH_TEST/scripts/fetch_test_roms.sh" > "$LISPGB_FETCH_TEST/output" 2>&1; then
+        echo 'ROM の取得失敗を見逃しました。' >&2; exit 1
+    fi
+    test ! -e "$LISPGB_FETCH_TEST/tests/roms/acid2/dmg-acid2.gb"
+    test ! -e "$LISPGB_FETCH_TEST/tests/roms/acid2/dmg-acid2.gb.tmp"
+done
+echo 'ROM 固定取得・照合・取得失敗の検証合格'

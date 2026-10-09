@@ -191,4 +191,12 @@ if [ ! -e "$ROMS_DIR/acid2/cgb-acid2.gbc" ]; then
     cp "$ROMS_DIR/acid2/cgb-acid2.gb" "$ROMS_DIR/acid2/cgb-acid2.gbc"
 fi
 verify_sha256 "$ROMS_DIR/acid2/cgb-acid2.gbc" "$CGB_ACID2_SHA256"
+# 共通一覧の全ファイルが揃わなければ成功としない。
+while IFS= read -r rom_name; do
+    case "$rom_name" in ''|'#'*) continue ;; esac
+    if [ ! -s "$ROMS_DIR/$rom_name" ]; then
+        echo "必須テスト ROM が未取得または空です: $rom_name" >&2
+        exit 1
+    fi
+done < "$PROJECT_ROOT/tests/rom-manifest.txt"
 echo "fetch_test_roms.sh: 完了。配置先: $ROMS_DIR"
