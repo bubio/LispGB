@@ -12,7 +12,9 @@ if [ "$(uname -s)" = Darwin ]; then
     LISPGB_ZSTD_LIBRARY=$(otool -L build/lispgb-runtime | awk '/\/libzstd[^ ]*\.dylib / {print $1}')
     if [ -n "$LISPGB_ZSTD_LIBRARY" ]; then
         LISPGB_ZSTD_PREFIX=$(dirname "$(dirname "$LISPGB_ZSTD_LIBRARY")")
-        cp "$LISPGB_ZSTD_LIBRARY" build/libzstd.1.dylib
+        # Homebrew の dylib は読み取り専用。再ビルド時は既存のコピーを置き換える。
+        cp -f "$LISPGB_ZSTD_LIBRARY" build/libzstd.1.dylib
+        chmod u+w build/libzstd.1.dylib
         cp "$LISPGB_ZSTD_PREFIX/LICENSE" build/zstd-LICENSE
         install_name_tool -change "$LISPGB_ZSTD_LIBRARY" '@executable_path/libzstd.1.dylib' build/lispgb-runtime
         codesign --force --sign - build/libzstd.1.dylib
