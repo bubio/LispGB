@@ -336,3 +336,4 @@ T052 の検証コマンドは T055 のヘッドレス CLI を使用するため�
 
 - [X] T088 バージョンを1.0.0へ更新し、RuxBoyを参考に利用者・ソースからビルドする利用者向けのREADMEを両言語で整える。Linux CIをci-linux.ymlへ改名し、全OSのCIのpush / pull_requestをビルド・テストに関係するパスに限定する。バージョン表示・配布ZIP・ワークフロー構文と対象パスを検証する。
 - [X] T089 Windows CI の ROM 一覧照合で CRLF の末尾 CR がファイル名へ混入する不具合を修正する。失敗ログと同じエラーを CRLF 一覧で再現し、LF / CRLF の回帰検証を追加する。Windows の必須テストモードでも Git Bash の取得回帰を実行し、全テストと構文を確認する。
+- [X] T090 macOS の SDL2 ライブラリ探索と利用者向け README を MacPorts に対応させる。`/opt/local/lib/libSDL2.dylib` を探索候補に追加し、Homebrew と MacPorts の両方の導入・ビルド手順を示す。探索順を単体テストで確認する。

@@ -79,6 +79,12 @@
   (is (equal '("C:/test/program/SDL2.dll" "SDL2.dll")
              (lispgb::sdl-library-candidates :windows #P"C:/test/program/lispgb.exe"))))
 
+(deftest sdl-library-candidates-macos-includes-macports ()
+  (is (equal '("libSDL2.dylib" "/opt/homebrew/lib/libSDL2.dylib"
+              "/usr/local/lib/libSDL2.dylib" "/opt/local/lib/libSDL2.dylib"
+              "/Library/Frameworks/SDL2.framework/SDL2")
+             (lispgb::sdl-library-candidates :macos))))
+
 (deftest atomic-save-relative-path ()
   ;; rename-file の相対宛先は元ファイルのディレクトリに対して解決される。
   (let* ((root (asdf:system-source-directory "lispgb"))

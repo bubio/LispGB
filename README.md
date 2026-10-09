@@ -49,10 +49,11 @@ sudo apt install libsdl2-2.0-0
 
 ### macOS
 
-Install SDL2 with Homebrew, then run from the extracted directory. Keep the executable and the included `.dylib` files together.
+Install SDL2 with Homebrew or MacPorts, then run from the extracted directory. Keep the executable and the included `.dylib` files together.
 
 ```sh
 brew install sdl2
+# or: sudo port install libsdl2
 ./lispgb game.gbc
 ```
 
@@ -87,6 +88,7 @@ sh scripts/build.sh
 
 ```sh
 brew install sbcl sdl2
+# or: sudo port install sbcl libsdl2
 sh scripts/build.sh
 ./build/lispgb game.gbc
 ```

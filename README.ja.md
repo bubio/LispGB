@@ -49,10 +49,11 @@ sudo apt install libsdl2-2.0-0
 
 ### macOS
 
-Homebrew で SDL2 を導入し、展開したディレクトリで起動します。実行ファイルと同梱の `.dylib` は同じディレクトリに置いてください。
+Homebrew または MacPorts で SDL2 を導入し、展開したディレクトリで起動します。実行ファイルと同梱の `.dylib` は同じディレクトリに置いてください。
 
 ```sh
 brew install sdl2
+# または: sudo port install libsdl2
 ./lispgb game.gbc
 ```
 
@@ -87,6 +88,7 @@ sh scripts/build.sh
 
 ```sh
 brew install sbcl sdl2
+# または: sudo port install sbcl libsdl2
 sh scripts/build.sh
 ./build/lispgb game.gbc
 ```

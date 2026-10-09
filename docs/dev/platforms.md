@@ -49,7 +49,7 @@ macOS の Cocoa 初期化は、SBCL の浮動小数点例外設定によって i
 なることを実測した。macOS の SDL FFI 呼び出し中だけ invalid / divide-by-zero / overflow
 をマスクし、呼び出し後は元の設定を復元する。コアと Linux の FFI には適用しない。
 Lisp のエントリポイントからは `SDL_SetMainReady` を呼ぶ。
-SDL2 は dylib 名、Homebrew の arm64 / Intel 標準パス、システムの Framework の順で探索する。
+SDL2 は dylib 名、Homebrew の arm64 / Intel 標準パス、MacPorts の標準パス、システムの Framework の順で探索する。
 
 UI 操作ツールで識別するため、検証時だけ一時的な .app に実行ファイルをコピーした。
 配布は仕様どおり CLI の ZIP。保存・復元と B 入力は SDL イベントによる自動検証で、
