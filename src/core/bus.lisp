@@ -3,7 +3,7 @@
 
 (defun zero-octets (size) (make-array size :element-type 'u8 :initial-element 0))
 (defstruct bus
-  (mode :dmg :type symbol) cart
+  (mode :dmg :type symbol) (cart nil :type (or null cartridge))
   (rom (zero-octets 32768) :type octets) (ram (zero-octets 8192) :type octets)
   (wram (zero-octets 32768) :type octets) (vram (zero-octets 16384) :type octets)
   (oam (zero-octets 160) :type octets) (hram (zero-octets 127) :type octets)
@@ -72,6 +72,7 @@
          (setf (bus-dma-source bus) (ash value 8) (bus-dma-delay bus) 2 (bus-dma-clock bus) 0))
         (t (setf (aref (bus-io bus) (- address #xff00)) value))))
 (defun bus-tick (bus cycles)
+  (declare (type bus bus) (type fixnum cycles))
   (apu-tick (bus-apu bus) (if (bus-double-speed bus) (ash cycles -1) cycles))
   (when (timer-tick (bus-timer bus) cycles)
     (setf (bus-if bus) (logior 4 (bus-if bus))))

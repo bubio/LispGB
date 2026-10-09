@@ -32,9 +32,16 @@
 (defvar *cb-opcodes* (make-array 256 :initial-element nil))
 (declaim (inline cpu-tick cpu-read cpu-write cpu-fetch8 cpu-fetch16 signed8 cpu-flags))
 (defun cpu-tick (cpu bus &optional (cycles 4))
+  (declare (type cpu cpu) (type bus bus) (type fixnum cycles))
   (incf (cpu-cycles cpu) cycles) (bus-tick bus cycles))
 (defun cpu-read (cpu bus address)
-  (cpu-tick cpu bus) (bus-read bus address))
+  (declare (type cpu cpu) (type bus bus) (type u16 address))
+  ;; DMA と割り込みのタイミングを保ち、読み出し前の更新順は変えない。
+  (cpu-tick cpu bus)
+  (cond ((and (< address #x8000) (bus-cart bus)) (mbc-read-rom (bus-cart bus) address))
+        ((<= #xc000 address #xfdff) (aref (bus-wram bus) (wram-offset bus address)))
+        ((<= #xff80 address #xfffe) (aref (bus-hram bus) (- address #xff80)))
+        (t (bus-read bus address))))
 (defun cpu-write (cpu bus address value)
   (cpu-tick cpu bus) (bus-write bus address value))
 (defun cpu-fetch8 (cpu bus)
@@ -72,6 +79,7 @@
 
 (defun cpu-step (cpu bus)
   "割り込み受理または一命令を実行し、消費 T サイクル数を返す。"
+  (declare (type cpu cpu) (type bus bus))
   (let ((start (cpu-cycles cpu)) (pending (logand #x1f (bus-ie bus) (bus-if bus))))
     (when (plusp pending) (setf (cpu-halted cpu) nil))
     (cond
