@@ -4,6 +4,8 @@
 
 Common Lisp（SBCL）で書いた Game Boy / Game Boy Color エミュレーターです。映像・音声・入力に SDL2 を使うコマンドラインアプリで、ブート ROM は不要です。
 
+[Spec Kit](https://github.com/github/spec-kit) の有用性を実践的に試すプロジェクトとして始めました。
+
 コアは [RuxBoy](https://github.com/bubio/ruxboy) を参照して実装しました。RuxBoy のコアの移植元は BubiBoy Lite（MIT License）です。
 
 [![Release](https://img.shields.io/github/v/release/bubio/LispGB)](https://github.com/bubio/LispGB/releases/latest)
