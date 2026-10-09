@@ -84,8 +84,8 @@ Linux の `ci.yml` と分け、`.github/workflows/ci-macos.yml` に macOS 用の
 
 | 対象 | ZIP / artifact |
 |---|---|
-| Apple Silicon | `LispGB-<version>-macos-arm64.zip` / `LispGB-macos-arm64` |
-| Intel | `LispGB-<version>-macos-amd64.zip` / `LispGB-macos-amd64` |
+| Apple Silicon | `LispGB-<version>-macos-apple-silicon.zip` / `LispGB-macos-apple-silicon` |
+| Intel | `LispGB-<version>-macos-intel.zip` / `LispGB-macos-intel` |
 
 各ランナーで Homebrew の SBCL / SDL2 を導入し、全テスト、ビルド、ヘッドレス120フレーム、
 ZIP作成と展開後の実行を検証する。`scripts/verify_macos_package.sh` は `lipo -archs` で

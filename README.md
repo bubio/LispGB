@@ -28,11 +28,11 @@ The Blargg CPU/audio and dmg-acid2 / cgb-acid2 tests pass. Three Mooneye timing 
 
 | Platform | ZIP to download |
 |---|---|
-| Ubuntu 24.04 or newer (amd64 / x86_64) | `LispGB-1.0.0-linux-amd64.zip` |
-| Ubuntu 24.04 or newer (arm64 / aarch64) | `LispGB-1.0.0-linux-arm64.zip` |
-| macOS (Apple Silicon) | `LispGB-1.0.0-macos-arm64.zip` |
-| macOS (Intel) | `LispGB-1.0.0-macos-amd64.zip` |
-| Windows 11 (x64) | `LispGB-1.0.0-windows-amd64.zip` |
+| Ubuntu 24.04 or newer (x86_64) | `LispGB-1.0.0-linux-x86_64.zip` |
+| Ubuntu 24.04 or newer (aarch64) | `LispGB-1.0.0-linux-aarch64.zip` |
+| macOS (Apple Silicon) | `LispGB-1.0.0-macos-apple-silicon.zip` |
+| macOS (Intel) | `LispGB-1.0.0-macos-intel.zip` |
+| Windows 11 (x64) | `LispGB-1.0.0-windows-x64.zip` |
 
 GUI operation on Intel Macs has not been verified.
 

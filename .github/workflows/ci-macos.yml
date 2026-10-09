@@ -50,9 +50,11 @@ jobs:
         include:
           - cpu: Apple Silicon
             arch: arm64
+            artifact_arch: apple-silicon
             runner: macos-15
           - cpu: Intel
             arch: amd64
+            artifact_arch: intel
             runner: macos-15-intel
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 25
@@ -76,6 +78,6 @@ jobs:
         run: sh scripts/verify_macos_package.sh "${{ matrix.arch }}"
       - uses: actions/upload-artifact@v7
         with:
-          name: LispGB-macos-${{ matrix.arch }}
-          path: dist/LispGB-*-macos-${{ matrix.arch }}.zip
+          name: LispGB-macos-${{ matrix.artifact_arch }}
+          path: dist/LispGB-*-macos-${{ matrix.artifact_arch }}.zip
           if-no-files-found: error

@@ -5,7 +5,7 @@ $previousHome = $env:SBCL_HOME
 $previousAppdata = $env:APPDATA
 try {
     $version = [regex]::Match((Get-Content lispgb.asd -Raw), ':version\s+"([^"]+)"').Groups[1].Value
-    Expand-Archive -LiteralPath "dist/LispGB-$version-windows-amd64.zip" -DestinationPath build/package-check -Force
+    Expand-Archive -LiteralPath "dist/LispGB-$version-windows-x64.zip" -DestinationPath build/package-check -Force
     $exe = (Resolve-Path build/package-check/lispgb.exe).Path
     $rom = (Resolve-Path tests/roms/acid2/cgb-acid2.gbc).Path
     $bmp = Join-Path (Resolve-Path build/package-check).Path 'frame.bmp'

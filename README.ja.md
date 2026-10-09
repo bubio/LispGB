@@ -28,11 +28,11 @@ Blargg の CPU・音源テストと dmg-acid2 / cgb-acid2 に合格していま�
 
 | 環境 | 選択する ZIP |
 |---|---|
-| Ubuntu 24.04 以降（amd64 / x86_64） | `LispGB-1.0.0-linux-amd64.zip` |
-| Ubuntu 24.04 以降（arm64 / aarch64） | `LispGB-1.0.0-linux-arm64.zip` |
-| macOS（Apple Silicon） | `LispGB-1.0.0-macos-arm64.zip` |
-| macOS（Intel） | `LispGB-1.0.0-macos-amd64.zip` |
-| Windows 11（x64） | `LispGB-1.0.0-windows-amd64.zip` |
+| Ubuntu 24.04 以降（x86_64） | `LispGB-1.0.0-linux-x86_64.zip` |
+| Ubuntu 24.04 以降（aarch64） | `LispGB-1.0.0-linux-aarch64.zip` |
+| macOS（Apple Silicon） | `LispGB-1.0.0-macos-apple-silicon.zip` |
+| macOS（Intel） | `LispGB-1.0.0-macos-intel.zip` |
+| Windows 11（x64） | `LispGB-1.0.0-windows-x64.zip` |
 
 macOS Intel の GUI 動作は未確認です。
 

@@ -82,6 +82,6 @@ jobs:
         run: ./scripts/verify_windows_package.ps1
       - uses: actions/upload-artifact@v7
         with:
-          name: LispGB-windows-amd64
-          path: dist/LispGB-*-windows-amd64.zip
+          name: LispGB-windows-x64
+          path: dist/LispGB-*-windows-x64.zip
           if-no-files-found: error

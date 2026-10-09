@@ -338,3 +338,4 @@ T052 の検証コマンドは T055 のヘッドレス CLI を使用するため�
 - [X] T089 Windows CI の ROM 一覧照合で CRLF の末尾 CR がファイル名へ混入する不具合を修正する。失敗ログと同じエラーを CRLF 一覧で再現し、LF / CRLF の回帰検証を追加する。Windows の必須テストモードでも Git Bash の取得回帰を実行し、全テストと構文を確認する。
 - [X] T090 macOS の SDL2 ライブラリ探索と利用者向け README を MacPorts に対応させる。`/opt/local/lib/libSDL2.dylib` を探索候補に追加し、Homebrew と MacPorts の両方の導入・ビルド手順を示す。探索順を単体テストで確認する。
 - [X] T091 README の両言語版に、Spec Kit の有用性を実践的に試すために始めたプロジェクトであることを追記する。
+- [X] T092 配布 ZIP と GitHub Actions artifact のアーキテクチャ名を OS ごとの慣例に合わせる。Linux は `x86_64` / `aarch64`、macOS は `apple-silicon` / `intel`、Windows は `x64` を使い、生成・検証・Release 添付・README を同期する。

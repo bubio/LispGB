@@ -4,8 +4,8 @@ set -eu
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 cd "$SCRIPT_DIR/.."
 case "${1:-}" in
-    arm64) arch=arm64; cpu=arm64 ;;
-    amd64) arch=amd64; cpu=x86_64 ;;
+    arm64) arch=apple-silicon; cpu=arm64 ;;
+    amd64) arch=intel; cpu=x86_64 ;;
     *) echo "使い方: verify_macos_package.sh arm64|amd64" >&2; exit 2 ;;
 esac
 version=$(sh scripts/get_version.sh)

@@ -82,7 +82,8 @@ sh scripts/bench.sh tests/roms/blargg/cpu_instrs/cpu_instrs.gb
 sh scripts/package_zip.sh
 ```
 
-**期待される結果**: `dist/LispGB-<version>-linux-arm64.zip` ができる。SBCL が入っていない
+**期待される結果**: arm64 では `dist/LispGB-<version>-linux-aarch64.zip`、x86_64 では
+`dist/LispGB-<version>-linux-x86_64.zip` ができる。SBCL が入っていない
 Ubuntu 24.04 で、`libsdl2-2.0-0` を入れれば展開してすぐ起動できる。
 
 ## macOS のローカル検証
@@ -92,7 +93,8 @@ Ubuntu 24.04 で、`libsdl2-2.0-0` を入れれば展開してすぐ起動でき
 SDL イベントキューを通じた入力・保存・復元・終了を検証する（物理キーの入力とは別）。
 設定と保存先は一時ディレクトリに隔離する。
 macOS の通常の設定先は `~/Library/Application Support/LispGB/`、
-ZIP は `dist/LispGB-<version>-macos-arm64.zip`。
+ZIP は Apple Silicon では `dist/LispGB-<version>-macos-apple-silicon.zip`、Intel では
+`dist/LispGB-<version>-macos-intel.zip`。
 
 ## Windows 11 x64
 

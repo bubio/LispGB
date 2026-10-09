@@ -50,7 +50,7 @@ jobs:
       - name: GitHub Releases へ添付
         uses: softprops/action-gh-release@v3
         with:
-          files: dist/LispGB-*-windows-amd64.zip
+          files: dist/LispGB-*-windows-x64.zip
           fail_on_unmatched_files: true
           generate_release_notes: true
   linux:
@@ -62,8 +62,10 @@ jobs:
       matrix:
         include:
           - arch: arm64
+            artifact_arch: aarch64
             runner: ubuntu-24.04-arm
           - arch: amd64
+            artifact_arch: x86_64
             runner: ubuntu-24.04
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 20
@@ -86,7 +88,7 @@ jobs:
       - name: GitHub Releases へ添付
         uses: softprops/action-gh-release@v3
         with:
-          files: dist/LispGB-*-linux-${{ matrix.arch }}.zip
+          files: dist/LispGB-*-linux-${{ matrix.artifact_arch }}.zip
           fail_on_unmatched_files: true
           generate_release_notes: true
   macos:
@@ -97,8 +99,10 @@ jobs:
       matrix:
         include:
           - arch: arm64
+            artifact_arch: apple-silicon
             runner: macos-15
           - arch: amd64
+            artifact_arch: intel
             runner: macos-15-intel
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 25
@@ -123,5 +127,5 @@ jobs:
       - name: GitHub Releases へ添付
         uses: softprops/action-gh-release@v3
         with:
-          files: dist/LispGB-*-macos-${{ matrix.arch }}.zip
+          files: dist/LispGB-*-macos-${{ matrix.artifact_arch }}.zip
           fail_on_unmatched_files: true

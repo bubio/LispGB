@@ -8,8 +8,10 @@ case "$(uname -s)" in
     *) echo "未対応の OS です。" >&2; exit 1 ;;
 esac
 case "$(uname -m)" in
-    aarch64|arm64) arch=arm64 ;;
-    x86_64|amd64) arch=amd64 ;;
+    aarch64|arm64)
+        case "$platform" in linux) arch=aarch64 ;; macos) arch=apple-silicon ;; esac ;;
+    x86_64|amd64)
+        case "$platform" in linux) arch=x86_64 ;; macos) arch=intel ;; esac ;;
     *) echo "未対応の CPU アーキテクチャです。" >&2; exit 1 ;;
 esac
 test -x build/lispgb
