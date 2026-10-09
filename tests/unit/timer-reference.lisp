@@ -1,0 +1,15 @@
+;;; 逐次更新をタイミング比較用の参照実装として固定する。
+(in-package #:lispgb.core)
+(defun reference-timer-tick (timer cycles)
+  "T サイクルごとに立ち下がりと再ロードを処理し、割り込み要求を返す。"
+  (let ((interrupt nil))
+    (setf (timer-reloaded-p timer) nil)
+    (dotimes (i cycles)
+      (when (plusp (timer-overflow-delay timer))
+        (when (zerop (decf (timer-overflow-delay timer)))
+          (setf (timer-tima timer) (timer-tma timer)
+                (timer-reloaded-p timer) t interrupt t)))
+      (let ((old (timer-signal timer)))
+        (setf (timer-div-counter timer) (wrap16 (1+ (timer-div-counter timer))))
+        (when (and old (not (timer-signal timer))) (timer-increment timer))))
+    interrupt))

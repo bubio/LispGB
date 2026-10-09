@@ -80,15 +80,19 @@
     (ppu-tick (bus-ppu bus) (if (bus-double-speed bus) (ash cycles -1) cycles) (bus-vram bus) (bus-oam bus)
               (when (bus-hdma-active bus) (lambda () (when (bus-hdma-active bus) (bus-hdma-block bus)))))))
   (incf (bus-dma-clock bus) cycles)
-  (loop while (>= (bus-dma-clock bus) 4) do
-    (decf (bus-dma-clock bus) 4)
-    (when (plusp (bus-dma-delay bus))
-      (when (zerop (decf (bus-dma-delay bus)))
-        (setf (bus-dma-active bus) t (bus-dma-index bus) 0)))
-    (when (bus-dma-active bus)
-      (setf (aref (bus-oam bus) (bus-dma-index bus))
-            (bus-read bus (wrap16 (+ (bus-dma-source bus) (bus-dma-index bus)))))
-      (when (= 160 (incf (bus-dma-index bus))) (setf (bus-dma-active bus) nil))))
+  (if (or (bus-dma-active bus) (plusp (bus-dma-delay bus)))
+      (loop while (>= (bus-dma-clock bus) 4) do
+        (decf (bus-dma-clock bus) 4)
+        (when (plusp (bus-dma-delay bus))
+          (when (zerop (decf (bus-dma-delay bus)))
+            (setf (bus-dma-active bus) t (bus-dma-index bus) 0)))
+        (when (bus-dma-active bus)
+          (setf (aref (bus-oam bus) (bus-dma-index bus))
+                (bus-read bus (wrap16 (+ (bus-dma-source bus) (bus-dma-index bus)))))
+          (when (= 160 (incf (bus-dma-index bus))) (setf (bus-dma-active bus) nil))))
+      ;; 待機中も保存されるクロックの端数は保つが、4サイクルごとのループは不要。
+      (setf (bus-dma-clock bus) (logand 3 (bus-dma-clock bus))))
+
   (incf (bus-cycles bus) cycles)
   (incf (bus-hw-cycles bus) (if (bus-double-speed bus) (ash cycles -1) cycles))
   (when (plusp (bus-hdma-stall bus))
