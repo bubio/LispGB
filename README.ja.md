@@ -12,7 +12,7 @@ Common Lisp（SBCL）で書いた Game Boy / Game Boy Color エミュレータ�
 
 ## 対応プラットフォーム
 
-Linux arm64。Ubuntu 24.04 以降を対象としています。ローカルでは Ubuntu 26.04 で動作確認済みで、配布ビルドは Ubuntu 24.04 向けに設定しています。
+Linux amd64 / arm64。Ubuntu 24.04 以降を対象としています。ローカルでは Ubuntu 26.04 で動作確認済みで、配布ビルドは Ubuntu 24.04 向けに設定しています。
 
 ## インストール
 

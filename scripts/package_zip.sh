@@ -2,9 +2,14 @@
 set -eu
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 cd "$SCRIPT_DIR/.."
+case "$(uname -s)" in
+    Linux) platform=linux ;;
+    *) echo "この配布スクリプトは Linux 用です。" >&2; exit 1 ;;
+esac
 case "$(uname -m)" in
-    aarch64|arm64) ;;
-    *) echo "この配布スクリプトは Linux arm64 用です。" >&2; exit 1 ;;
+    aarch64|arm64) arch=arm64 ;;
+    x86_64|amd64) arch=amd64 ;;
+    *) echo "未対応の CPU アーキテクチャです。" >&2; exit 1 ;;
 esac
 test -x build/lispgb
 version=$(sh scripts/get_version.sh)
@@ -14,5 +19,5 @@ LISPGB_PACKAGE_DIR=$(mktemp -d)
 trap 'rm -rf "$LISPGB_PACKAGE_DIR"' EXIT HUP INT TERM
 cp build/lispgb README.md README.ja.md LICENSE "$LISPGB_PACKAGE_DIR/"
 (cd "$LISPGB_PACKAGE_DIR" && zip -q package.zip lispgb README.md README.ja.md LICENSE)
-mv "$LISPGB_PACKAGE_DIR/package.zip" "dist/LispGB-$version-linux-arm64.zip"
-echo "配布物: dist/LispGB-$version-linux-arm64.zip"
+mv "$LISPGB_PACKAGE_DIR/package.zip" "dist/LispGB-$version-$platform-$arch.zip"
+echo "配布物: dist/LispGB-$version-$platform-$arch.zip"

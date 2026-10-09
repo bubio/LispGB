@@ -12,7 +12,7 @@ The emulation core is based on [RuxBoy](https://github.com/bubio/ruxboy), whose 
 
 ## Supported platform
 
-Linux arm64, targeting Ubuntu 24.04 or newer. Local operation has been verified on Ubuntu 26.04. Release builds are configured for Ubuntu 24.04.
+Linux amd64 / arm64, targeting Ubuntu 24.04 or newer. Local operation has been verified on Ubuntu 26.04. Release builds are configured for Ubuntu 24.04.
 
 ## Installation
 

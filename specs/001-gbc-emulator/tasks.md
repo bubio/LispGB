@@ -225,6 +225,13 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 
 ---
 
+## Phase 8: プラットフォームの拡張（2026-10-09）
+
+- [X] T074 Linux amd64 の CI / Release と ZIP 作成を整備する。全テストを検証してコミット・プッシュし、arm64 / amd64 の CI 成功を確認してから macOS に進む
+- [ ] T075 macOS の SDL2 読み込み、設定保存先、ZIP 作成を実装する。回帰テスト、ローカルビルド、ヘッドレスとネイティブウィンドウを検証し、利用手順と検証結果を記録する
+
+---
+
 ## Dependencies & Execution Order
 
 ### Phase Dependencies
