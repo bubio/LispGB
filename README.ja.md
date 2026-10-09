@@ -34,8 +34,6 @@ Blargg の CPU・音源テストと dmg-acid2 / cgb-acid2 に合格していま�
 | macOS（Intel） | `LispGB-1.0.0-macos-intel.zip` |
 | Windows 11（x64） | `LispGB-1.0.0-windows-x64.zip` |
 
-macOS Intel の GUI 動作は未確認です。
-
 ## インストール
 
 [Releases](https://github.com/bubio/LispGB/releases) から対応する ZIP をダウンロードして展開してください。実行に SBCL や Quicklisp は不要です。ROM は付属しません。

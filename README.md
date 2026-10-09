@@ -34,8 +34,6 @@ The Blargg CPU/audio and dmg-acid2 / cgb-acid2 tests pass. Three Mooneye timing 
 | macOS (Intel) | `LispGB-1.0.0-macos-intel.zip` |
 | Windows 11 (x64) | `LispGB-1.0.0-windows-x64.zip` |
 
-GUI operation on Intel Macs has not been verified.
-
 ## Installation
 
 Download the ZIP for your platform from [Releases](https://github.com/bubio/LispGB/releases) and extract it. SBCL and Quicklisp are not required to run it. ROMs are not included.

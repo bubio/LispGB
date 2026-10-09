@@ -43,7 +43,7 @@ macOS 27.0.1 / arm64、SBCL 2.6.9、Homebrew SDL2 で検証。
 | 実音声デバイス | `scripts/smoke_sdl.sh` で開き、120フレームを出力。聴感での音質は未検証 |
 | SDL 入力イベント | B、F1 保存、F3 復元、Esc を検証。復元後の全状態一致と音声キューの消去を確認 |
 | 設定・履歴 | `Library/Application Support/LispGB/` 以下に生成。XDG は Linux だけで使用 |
-| macOS Intel | ライブラリ探索と ZIP 名は対応、実ビルド・実動作は未検証 |
+| macOS Intel | ライブラリ探索と ZIP 名に対応。ユーザーによる実動作確認済み |
 
 macOS の Cocoa 初期化は、SBCL の浮動小数点例外設定によって invalid / overflow 例外に
 なることを実測した。macOS の SDL FFI 呼び出し中だけ invalid / divide-by-zero / overflow
@@ -183,3 +183,8 @@ Windows の `scripts/test.ps1` も必須モードでは既存の Git Bash を使
 通常のローカル単体テストには Git Bash を必須にしない。
 macOS の必須モードで全144テスト合格、不合格0、既知3件。シェル構文・actionlint・
 差分検査も合格した。修正後の Windows CI は未プッシュのため今回未検証。
+
+## macOS Intel の実動作確認（T093、2026-10-09）
+
+ユーザーが Intel Mac での LispGB の動作を確認し、正常に実行できた。これにより、Apple Silicon と
+Intel の両方で macOS の実動作確認済みとなった。

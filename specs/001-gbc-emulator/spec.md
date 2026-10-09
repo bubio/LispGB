@@ -29,7 +29,7 @@ RuxBoy が備える機能は次のとおり：CPU・画面・音声のエミュ�
 - Windows 版の開発を進める。現在の検証環境は Windows 11 x86_64、SBCL は導入済み。
 
 - Linux arm64 の動作、Linux amd64 のローカルビルド・動作はユーザーが確認済み。amd64 の CI を整備し、コミット・プッシュと CI 成功確認後に macOS の実装へ進む。
-- macOS の設定保存先は FR-017 に従う。Apple Silicon の現在の環境で検証し、Intel の実動作は未検証として記録する。
+- macOS の設定保存先は FR-017 に従う。Apple Silicon と Intel の両方で実動作を確認済みとして記録する。
 
 ## User Scenarios & Testing *(mandatory)*
 
