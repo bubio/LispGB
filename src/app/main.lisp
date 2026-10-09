@@ -17,7 +17,7 @@
                 (let* ((base (concatenate 'string (namestring path) ".bak"))
                        (backup (loop for i from 0 for candidate = (if (zerop i) base (format nil "~A.~D" base i))
                                      unless (probe-file candidate) return candidate)))
-                  (rename-file path backup)
+                  (rename-file path (merge-pathnames backup (uiop:getcwd)))
                   (format *error-output* "警告: セーブ RAM のサイズが違うため、~A に退避しました。~%" backup)))))
         (make-persistence :path path)))))
 (defun flush-save-ram (persistence machine)

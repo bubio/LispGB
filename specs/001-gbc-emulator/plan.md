@@ -30,7 +30,10 @@ SDL2（`libSDL2-2.0.so.0`）だけで、起動時に動的に読み込む。外�
 結合テスト（Blargg、Mooneye、acid2）を書く。`scripts/test.sh` で一括実行する。
 
 **Target Platform**: Linux arm64（Ubuntu 24.04 以降）。開発環境は Ubuntu 26.04 / aarch64。
-amd64、macOS、Windows は将来の対象。
+Linux amd64 はローカルと Ubuntu 24.04 CI で確認済み（2026-10-09）。
+macOS は Apple Silicon のローカル環境に展開する。SDL2 は Homebrew の dylib または
+Framework を遅延ロードし、設定は `~/Library/Application Support/LispGB/` に保存する。
+macOS Intel と Windows は実動作未検証。
 
 **Project Type**: デスクトップの CLI アプリケーション（エミュレーター）
 

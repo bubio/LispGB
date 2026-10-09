@@ -5,8 +5,9 @@
 
 ## 前提
 
-- Linux arm64（Ubuntu 24.04 以降）
+- Linux amd64 / arm64（Ubuntu 24.04 以降）、または macOS Apple Silicon
 - `sudo apt install sbcl libsdl2-dev curl zip`（実行するだけなら `libsdl2-2.0-0` で足りる）
+- macOS は `brew install sbcl sdl2`（実行するだけなら `sdl2` で足りる）
 - Quicklisp は不要
 
 ## 1. テスト ROM を取得して全テストを実行する（SC-001〜003）
@@ -83,3 +84,12 @@ sh scripts/package_zip.sh
 
 **期待される結果**: `dist/LispGB-<version>-linux-arm64.zip` ができる。SBCL が入っていない
 Ubuntu 24.04 で、`libsdl2-2.0-0` を入れれば展開してすぐ起動できる。
+
+## macOS のローカル検証
+
+`sh scripts/smoke.sh` でヘッドレス実行を検証する。
+`sh scripts/smoke_sdl.sh` は実ウィンドウと音声デバイスを使用し、120フレームの描画・音声出力、
+SDL イベントキューを通じた入力・保存・復元・終了を検証する（物理キーの入力とは別）。
+設定と保存先は一時ディレクトリに隔離する。
+macOS の通常の設定先は `~/Library/Application Support/LispGB/`、
+ZIP は `dist/LispGB-<version>-macos-arm64.zip`。

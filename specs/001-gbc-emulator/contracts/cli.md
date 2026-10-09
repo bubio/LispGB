@@ -52,5 +52,7 @@ lispgb [options] <ROMファイル>
 
 - 実行時に `libSDL2-2.0.so.0` が必要。ただし `--headless`、`--help`、`--version`、
   `--recent` では不要で、SDL2 を読み込まない。
-- SDL2 が見つからない場合は、次のように案内する:
+- macOS では Homebrew の `libSDL2.dylib` または SDL2 Framework を使う。見つからなければ
+  `SDL2 が見つかりません。brew install sdl2 で導入してください。` と案内する。
+- Linux で SDL2 が見つからない場合は、次のように案内する:
   `SDL2 が見つかりません。sudo apt install libsdl2-2.0-0 で導入してください。`

@@ -7,7 +7,7 @@ spec FR-017、FR-018。
 | OS | ディレクトリ |
 |---|---|
 | Linux | `$XDG_CONFIG_HOME/LispGB/`（未設定または空なら `~/.config/LispGB/`） |
-| macOS（将来） | `~/Library/Application Support/LispGB/` |
+| macOS | `~/Library/Application Support/LispGB/` |
 | Windows（将来） | `%APPDATA%\LispGB\` |
 
 ディレクトリがなければ、親ディレクトリも含めて作る。作れない場合は警告を出し、既定値で

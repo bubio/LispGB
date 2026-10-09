@@ -16,7 +16,8 @@
               (with-open-file (stream temporary :direction :output :element-type '(unsigned-byte 8)
                                      :if-exists :supersede :if-does-not-exist :create)
                 (write-sequence octets stream) (finish-output stream))
-              (uiop:rename-file-overwriting-target temporary path))
+              ;; 相対宛先を元ファイルのディレクトリへ再度結合しない。
+              (uiop:rename-file-overwriting-target temporary (merge-pathnames path (uiop:getcwd))))
           (error (condition) (error "ファイルを保存できません: ~A（~A）" path condition)))
       (when (probe-file temporary) (ignore-errors (delete-file temporary)))))
   path)

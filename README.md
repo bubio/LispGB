@@ -12,7 +12,9 @@ The emulation core is based on [RuxBoy](https://github.com/bubio/ruxboy), whose 
 
 ## Supported platform
 
-Linux amd64 / arm64, targeting Ubuntu 24.04 or newer. Local operation has been verified on Ubuntu 26.04. Release builds are configured for Ubuntu 24.04.
+Linux amd64 / arm64, targeting Ubuntu 24.04 or newer. Both architectures have been verified locally and in CI. Release builds use Ubuntu 24.04.
+
+macOS: local builds and operation are verified on Apple Silicon. Intel library paths and ZIP naming are supported, but Intel builds have not been verified.
 
 ## Installation
 
@@ -23,12 +25,29 @@ sudo apt install libsdl2-2.0-0
 ./lispgb --version
 ```
 
+On macOS, install SDL2 with Homebrew before running the extracted executable:
+
+```sh
+brew install sdl2
+./lispgb --version
+```
+
+Keep the executable and any included `.dylib` files in the same directory.
+
 SBCL is not needed to run the executable. SDL2 is not needed for headless operation, help, version, or the recent-ROM list.
 
 ## Building from source
 
 ```sh
 sudo apt install sbcl libsdl2-dev
+sh scripts/build.sh
+./build/lispgb --version
+```
+
+On macOS:
+
+```sh
+brew install sbcl sdl2
 sh scripts/build.sh
 ./build/lispgb --version
 ```
@@ -80,6 +99,8 @@ fullscreen = false
 shader = nearest
 volume = 100
 ```
+
+On macOS, configuration and recent ROMs are stored in `~/Library/Application Support/LispGB/`, regardless of `XDG_CONFIG_HOME`.
 
 Volume ranges from 0 to 100. Command-line options override configuration values. `#` starts a comment. Invalid entries are ignored. `recent.txt` in the same directory stores up to ten recent ROM paths.
 

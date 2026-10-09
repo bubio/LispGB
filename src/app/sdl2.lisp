@@ -2,9 +2,20 @@
 
 (defmacro define-sdl-functions (&body definitions)
   "C の署名を一か所に並べ、SBCL の FFI 宣言を生成する。"
-  `(progn ,@(loop for (c-name lisp-name result . arguments) in definitions
-                 collect `(sb-alien:define-alien-routine (,c-name ,lisp-name) ,result ,@arguments))))
+  `(progn
+     ,@(loop for (c-name lisp-name result . arguments) in definitions
+             for foreign-name = #+darwin (intern (format nil "%~A" lisp-name))
+                                #-darwin lisp-name
+             append
+             `((sb-alien:define-alien-routine (,c-name ,foreign-name) ,result ,@arguments)
+               ,@#+darwin
+               `((defun ,lisp-name ,(mapcar #'first arguments)
+                   ;; Cocoa の浮動小数点演算では、C 呼び出し中だけ SBCL の例外を抑制する。
+                   (sb-int:with-float-traps-masked (:invalid :divide-by-zero :overflow)
+                     (,foreign-name ,@(mapcar #'first arguments)))))
+               #-darwin nil))))
 (define-sdl-functions
+  ("SDL_SetMainReady" sdl-set-main-ready sb-alien:void)
   ("SDL_Init" sdl-init sb-alien:int (flags sb-alien:unsigned-int))
   ("SDL_Quit" sdl-quit sb-alien:void)
   ("SDL_GetError" sdl-get-error sb-alien:c-string)
@@ -40,8 +51,20 @@
     (error "SDL2: ~A" (sdl-get-error)))
   result)
 (defun load-sdl2 ()
-  (handler-case (sb-alien:load-shared-object "libSDL2-2.0.so.0" :dont-save t)
-    (error () (error "SDL2 が見つかりません。sudo apt install libsdl2-2.0-0 で導入してください。"))))
+  ;; SDL は通常実行時だけ読み込む。保存するコアイメージには含めない。
+  (dolist (library #+darwin '("libSDL2.dylib" "/opt/homebrew/lib/libSDL2.dylib"
+                            "/usr/local/lib/libSDL2.dylib"
+                            "/Library/Frameworks/SDL2.framework/SDL2")
+                  #-darwin '("libSDL2-2.0.so.0"))
+    (handler-case
+        (progn
+          (sb-alien:load-shared-object library :dont-save t)
+          ;; Lisp のエントリポイントでは SDL_main を経由しない。
+          (sdl-set-main-ready)
+          (return-from load-sdl2 t))
+      (error () nil)))
+  (error #+darwin "SDL2 が見つかりません。brew install sdl2 で導入してください。"
+         #-darwin "SDL2 が見つかりません。sudo apt install libsdl2-2.0-0 で導入してください。"))
 
 ;; SDL_events.h と SDL_keyboard.h の定義に従う。arm64 で C の offsetof とも照合済み。
 ;; SDL_Event は56バイト、type=0、key.keysym.sym=20、key.repeat=13。

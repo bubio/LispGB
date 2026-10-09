@@ -4,6 +4,8 @@ SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 cd "$SCRIPT_DIR/.."
 LISPGB_SMOKE_DIR=$(mktemp -d)
 trap 'rm -rf "$LISPGB_SMOKE_DIR"' EXIT HUP INT TERM
+mkdir -p "$LISPGB_SMOKE_DIR/home"
+export HOME="$LISPGB_SMOKE_DIR/home"
 export XDG_CONFIG_HOME="$LISPGB_SMOKE_DIR/config"
 version=$(sh scripts/get_version.sh)
 actual=$(./build/lispgb --version)

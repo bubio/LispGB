@@ -12,7 +12,9 @@ Common Lisp（SBCL）で書いた Game Boy / Game Boy Color エミュレータ�
 
 ## 対応プラットフォーム
 
-Linux amd64 / arm64。Ubuntu 24.04 以降を対象としています。ローカルでは Ubuntu 26.04 で動作確認済みで、配布ビルドは Ubuntu 24.04 向けに設定しています。
+Linux amd64 / arm64。Ubuntu 24.04 以降を対象としています。両アーキテクチャでローカル動作と CI を確認済みで、配布ビルドは Ubuntu 24.04 で行います。
+
+macOS は Apple Silicon でローカルビルドと動作を確認済みです。Intel のライブラリパスと ZIP 名にも対応していますが、Intel でのビルドは未検証です。
 
 ## インストール
 
@@ -23,12 +25,29 @@ sudo apt install libsdl2-2.0-0
 ./lispgb --version
 ```
 
+macOS では、展開した実行ファイルを使う前に Homebrew で SDL2 を導入してください。
+
+```sh
+brew install sdl2
+./lispgb --version
+```
+
+実行ファイルと同梱の `.dylib` は同じディレクトリに置いてください。
+
 実行には SBCL は不要です。ヘッドレス実行、使い方、バージョン、最近使った ROM の一覧表示では SDL2 も不要です。
 
 ## ソースからビルド
 
 ```sh
 sudo apt install sbcl libsdl2-dev
+sh scripts/build.sh
+./build/lispgb --version
+```
+
+macOS の場合:
+
+```sh
+brew install sbcl sdl2
 sh scripts/build.sh
 ./build/lispgb --version
 ```
@@ -80,6 +99,8 @@ fullscreen = false
 shader = nearest
 volume = 100
 ```
+
+macOS では設定と履歴を `~/Library/Application Support/LispGB/` に保存します。`XDG_CONFIG_HOME` の値には依存しません。
 
 音量は0〜100です。CLI の指定が設定ファイルより優先されます。`#` 以降はコメントで、不正な項目は無視します。同じ場所の `recent.txt` には最大10件の ROM のパスを保存します。
 

@@ -11,8 +11,8 @@
     (is (eq :nearest (lispgb::app-config-shader config)))
     (is (= 100 (lispgb::app-config-volume config)))))
 (deftest config-location ()
-  (is (equal #P"/tmp/config/LispGB/" (lispgb::config-directory "/tmp/config" #P"/tmp/home/")))
-  (is (equal #P"/tmp/home/.config/LispGB/" (lispgb::config-directory "" #P"/tmp/home/"))))
+  (is (equal #P"/tmp/config/LispGB/" (lispgb::config-directory "/tmp/config" #P"/tmp/home/" :linux)))
+  (is (equal #P"/tmp/home/.config/LispGB/" (lispgb::config-directory "" #P"/tmp/home/" :linux))))
 (deftest config-generate-defaults ()
   (let* ((directory (asdf:system-relative-pathname "lispgb" "build/test-config/"))
          (path (merge-pathnames "config.txt" directory)))
@@ -60,3 +60,42 @@
     (lispgb::output-audio audio machine 25)
     (is (= 250 (aref (lispgb::audio-buffer audio) 0)))
     (is (= -250 (aref (lispgb::audio-buffer audio) 1)))))
+
+(deftest config-location-macos ()
+  ;; macOS は XDG_CONFIG_HOME に依存せず、ホーム以下の標準保存先を使う。
+  (dolist (xdg (list nil "" "/tmp/xdg/"))
+    (is (equal #P"/tmp/home/Library/Application Support/LispGB/"
+               (lispgb::config-directory xdg #P"/tmp/home/" :macos)))))
+
+(deftest atomic-save-relative-path ()
+  ;; rename-file の相対宛先は元ファイルのディレクトリに対して解決される。
+  (let* ((root (asdf:system-source-directory "lispgb"))
+         (relative #P"build/test-relative-save/state.bin")
+         (absolute (merge-pathnames relative root))
+         (bytes (make-array 3 :element-type '(unsigned-byte 8) :initial-contents '(1 2 3))))
+    (ensure-directories-exist absolute)
+    (unwind-protect
+        (uiop:with-current-directory (root)
+          (lispgb::write-file-atomically relative bytes)
+          (is (equalp bytes (lispgb::read-file-octets absolute)))
+          (lispgb::write-file-atomically relative (reverse bytes))
+          (is (equalp (reverse bytes) (lispgb::read-file-octets absolute))))
+      (when (probe-file absolute) (delete-file absolute)))))
+
+(deftest save-ram-relative-backup ()
+  (let* ((root (asdf:system-source-directory "lispgb"))
+         (rom-path #P"build/test-relative-save/game.gb")
+         (save (merge-pathnames (lispgb::save-ram-path rom-path) root))
+         (backup (pathname (concatenate 'string (namestring save) ".bak")))
+         (machine (lispgb.core:make-machine (synthetic-rom :type #x03 :ram-code 2))))
+    (ensure-directories-exist save)
+    (unwind-protect
+        (uiop:with-current-directory (root)
+          (lispgb::write-file-atomically save (make-array 1 :element-type '(unsigned-byte 8) :initial-element 42))
+          (let ((persistence (lispgb::open-persistence machine rom-path)))
+            (is (probe-file backup))
+            (is (= 42 (aref (lispgb::read-file-octets backup) 0)))
+            (lispgb::flush-save-ram persistence machine)
+            (is (= 8192 (length (lispgb::read-file-octets save))))))
+      (when (probe-file save) (delete-file save))
+      (when (probe-file backup) (delete-file backup)))))
