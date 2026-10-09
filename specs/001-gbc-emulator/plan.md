@@ -129,7 +129,7 @@ scripts/
 ├── get_version.sh
 └── package_zip.sh
 .github/workflows/
-├── ci.yml                 # ubuntu-24.04-arm: テスト → ビルド
+├── ci-linux.yml           # Ubuntu 24.04 arm64 / amd64: テスト → ビルド
 └── release.yml            # タグをプッシュしたら zip を Releases に上げる
 docs/dev/                  # 開発文書（既知の不合格一覧、性能メモなど）
 README.md / README.ja.md / LICENSE

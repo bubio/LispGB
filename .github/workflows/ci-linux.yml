@@ -1,10 +1,32 @@
-name: CI
+name: CI Linux
 
 "on":
   push:
     branches: [main]
+    paths:
+      - 'lispgb.asd'
+      - 'src/**'
+      - 'tests/**'
+      - 'scripts/fetch_test_roms.sh'
+      - 'scripts/test.sh'
+      - 'scripts/build.sh'
+      - 'scripts/smoke.sh'
+      - 'scripts/package_zip.sh'
+      - 'scripts/get_version.sh'
+      - '.github/workflows/ci-linux.yml'
   pull_request:
     branches: [main]
+    paths:
+      - 'lispgb.asd'
+      - 'src/**'
+      - 'tests/**'
+      - 'scripts/fetch_test_roms.sh'
+      - 'scripts/test.sh'
+      - 'scripts/build.sh'
+      - 'scripts/smoke.sh'
+      - 'scripts/package_zip.sh'
+      - 'scripts/get_version.sh'
+      - '.github/workflows/ci-linux.yml'
   workflow_dispatch:
 
 env:
@@ -14,7 +36,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-linux-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:

@@ -1,7 +1,7 @@
 ;;; 外部の Lisp ライブラリを必要としないシステム定義。
 (asdf:defsystem "lispgb/core"
   :description "Game Boy Color エミュレーションコア"
-  :version "0.1.0"
+  :version "1.0.0"
   :license "MIT"
   :pathname "src/core/"
   :serial t
@@ -22,7 +22,7 @@
 
 (asdf:defsystem "lispgb"
   :description "LispGB の SDL2 フロントエンド"
-  :version "0.1.0"
+  :version "1.0.0"
   :depends-on ("lispgb/core")
   :pathname "src/app/"
   :serial t

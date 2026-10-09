@@ -3,8 +3,32 @@ name: CI macOS
 "on":
   push:
     branches: [main]
+    paths:
+      - 'lispgb.asd'
+      - 'src/**'
+      - 'tests/**'
+      - 'scripts/fetch_test_roms.sh'
+      - 'scripts/test.sh'
+      - 'scripts/build.sh'
+      - 'scripts/smoke.sh'
+      - 'scripts/package_zip.sh'
+      - 'scripts/get_version.sh'
+      - 'scripts/verify_macos_package.sh'
+      - '.github/workflows/ci-macos.yml'
   pull_request:
     branches: [main]
+    paths:
+      - 'lispgb.asd'
+      - 'src/**'
+      - 'tests/**'
+      - 'scripts/fetch_test_roms.sh'
+      - 'scripts/test.sh'
+      - 'scripts/build.sh'
+      - 'scripts/smoke.sh'
+      - 'scripts/package_zip.sh'
+      - 'scripts/get_version.sh'
+      - 'scripts/verify_macos_package.sh'
+      - '.github/workflows/ci-macos.yml'
   workflow_dispatch:
 
 env:

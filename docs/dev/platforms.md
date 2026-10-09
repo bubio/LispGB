@@ -154,3 +154,19 @@ Apple Silicon のローカル環境では全144テスト合格、不合格0、�
 ビルド・ヘッドレス・ZIP作成・単一 CPU と展開後の実行検証も成功。
 全ワークフローの actionlint に合格した。Intel と GitHub 上の Release 実行は今回未検証。
 プッシュ・タグ作成・公開は行っていない。
+
+## 1.0.0 リリース準備（T088、2026-10-09）
+
+ASDF のコアとアプリのバージョンを1.0.0へ更新。README は利用者向けに、
+配布ZIPの選択・OS別の導入・ソース取得とビルド・操作・保存・設定を両言語で整理した。
+Linux の CI は `ci-linux.yml`（表示名 `CI Linux`）へ改名した。
+各 OS の push / pull_request は、ソース・ASDF・テスト・実際に呼ぶスクリプトと
+その CI 定義に `paths` で限定した。README・文書・仕様・ベンチマークだけの変更では
+CI を起動しない。手動実行は維持し、Release のタグ実行にはパス条件を加えない。
+[GitHub のパスフィルター仕様](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onpushpull_requestpull_request_targetpathspaths-ignore)に従う。
+
+検証: actionlint、差分の空白検査、CI 対象パス17ケースに合格。
+macOS arm64 でビルドし、`LispGB 1.0.0`、ヘッドレス120フレーム、
+`LispGB-1.0.0-macos-arm64.zip` の単一 CPU と展開後の実行が成功。
+今回の変更はバージョン・README・CI 条件のみで、コアの再変更はない。
+プッシュ・タグ作成・GitHub Release 公開は未実施。

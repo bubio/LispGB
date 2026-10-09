@@ -2,8 +2,40 @@ name: CI Windows
 "on":
   push:
     branches: [main]
+    paths:
+      - 'lispgb.asd'
+      - 'src/**'
+      - 'tests/**'
+      - 'scripts/fetch_test_roms.sh'
+      - 'scripts/fetch_test_roms.ps1'
+      - 'scripts/fetch_sdl2.ps1'
+      - 'scripts/test.ps1'
+      - 'scripts/build.ps1'
+      - 'scripts/run.lisp'
+      - 'scripts/smoke.ps1'
+      - 'scripts/smoke_sdl.ps1'
+      - 'scripts/smoke_sdl.lisp'
+      - 'scripts/package_zip.ps1'
+      - 'scripts/verify_windows_package.ps1'
+      - '.github/workflows/ci-windows.yml'
   pull_request:
     branches: [main]
+    paths:
+      - 'lispgb.asd'
+      - 'src/**'
+      - 'tests/**'
+      - 'scripts/fetch_test_roms.sh'
+      - 'scripts/fetch_test_roms.ps1'
+      - 'scripts/fetch_sdl2.ps1'
+      - 'scripts/test.ps1'
+      - 'scripts/build.ps1'
+      - 'scripts/run.lisp'
+      - 'scripts/smoke.ps1'
+      - 'scripts/smoke_sdl.ps1'
+      - 'scripts/smoke_sdl.lisp'
+      - 'scripts/package_zip.ps1'
+      - 'scripts/verify_windows_package.ps1'
+      - '.github/workflows/ci-windows.yml'
   workflow_dispatch:
 env:
   LISPGB_REQUIRE_TEST_ROMS: "1"
