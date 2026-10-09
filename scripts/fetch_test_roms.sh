@@ -140,42 +140,55 @@ do
 	fetch_mooneye "emulator-only/mbc5/$name.gb" "$ROMS_DIR/mooneye/emulator-only/mbc5/$name.gb"
 done
 
-# dmg-acid2 (フェーズ3): mattcurrie/dmg-acid2 のリリース資産から直接取得する
-# (retrio/gb-test-roms や asoderman/Mooneye-Test-Suite-ROMS とはリポジトリが異なる)。
-ACID2_ROM_URL="https://github.com/mattcurrie/dmg-acid2/releases/download/v1.0/dmg-acid2.gb"
-ACID2_ROM_PATH="$ROMS_DIR/acid2/dmg-acid2.gb"
-if [ -f "$ACID2_ROM_PATH" ]; then
-	echo "fetch_test_roms.sh: 取得済み、スキップ: $ACID2_ROM_PATH"
-else
-	echo "fetch_test_roms.sh: 取得中: $ACID2_ROM_URL"
-	tmp_path="$ACID2_ROM_PATH.tmp"
-	if curl -fsSL --retry 3 --retry-delay 2 -o "$tmp_path" "$ACID2_ROM_URL"; then
-		mv "$tmp_path" "$ACID2_ROM_PATH"
-	else
-		rm -f "$tmp_path"
-		echo "fetch_test_roms.sh: 取得失敗: $ACID2_ROM_URL" >&2
-	fi
-fi
+# SameBoy の検証用 ROM を固定コミットから取得する。
+# 元の公式リリースとバイト一致することを確認した SHA256 も照合する。
+ACID2_COMMIT="c458e7c5d2d350fb37a1931c40da9f758d28d240"
+ACID2_BASE_URL="https://raw.githubusercontent.com/LIJI32/SameBoy/$ACID2_COMMIT/.github/actions"
+DMG_ACID2_SHA256="464e14b7d42e7feea0b7ede42be7071dc88913f75b9ffa444299424b63d1dff1"
+CGB_ACID2_SHA256="197fb0bcec544f0400527fc707e0a94f55435974986e6986b424ace5de81720e"
 
-# cgb-acid2 (フェーズ6): mattcurrie/cgb-acid2 のリリース資産から直接取得する。
-CGB_ACID2_ROM_URL="https://github.com/mattcurrie/cgb-acid2/releases/download/v1.1/cgb-acid2.gbc"
-CGB_ACID2_ROM_PATH="$ROMS_DIR/acid2/cgb-acid2.gb"
-if [ -f "$CGB_ACID2_ROM_PATH" ]; then
-	echo "fetch_test_roms.sh: 取得済み、スキップ: $CGB_ACID2_ROM_PATH"
-else
-	echo "fetch_test_roms.sh: 取得中: $CGB_ACID2_ROM_URL"
-	tmp_path="$CGB_ACID2_ROM_PATH.tmp"
-	if curl -fsSL --retry 3 --retry-delay 2 -o "$tmp_path" "$CGB_ACID2_ROM_URL"; then
-		mv "$tmp_path" "$CGB_ACID2_ROM_PATH"
-	else
-		rm -f "$tmp_path"
-		echo "fetch_test_roms.sh: 取得失敗: $CGB_ACID2_ROM_URL" >&2
-	fi
-fi
+verify_sha256() {
+    if command -v sha256sum >/dev/null 2>&1; then
+        actual=$(sha256sum "$1" | awk '{print $1}')
+    elif command -v shasum >/dev/null 2>&1; then
+        actual=$(shasum -a 256 "$1" | awk '{print $1}')
+    else
+        echo "SHA256 の照合には sha256sum または shasum が必要です。" >&2
+        return 1
+    fi
+    if [ "$actual" != "$2" ]; then
+        echo "テスト ROM の SHA256 が一致しません: $1" >&2
+        return 1
+    fi
+}
 
-# 参照実装の .gb 名を残し、利用ガイドの .gbc 名でも起動できるようにする。
-if [ -f "$CGB_ACID2_ROM_PATH" ] && [ ! -e "$ROMS_DIR/acid2/cgb-acid2.gbc" ]; then
-    cp "$CGB_ACID2_ROM_PATH" "$ROMS_DIR/acid2/cgb-acid2.gbc"
-fi
+fetch_acid2() {
+    acid_name=$1
+    acid_path=$2
+    acid_hash=$3
+    if [ -f "$acid_path" ]; then
+        verify_sha256 "$acid_path" "$acid_hash"
+        echo "fetch_test_roms.sh: 照合済み、スキップ: $acid_path"
+        return 0
+    fi
+    acid_tmp="$acid_path.tmp"
+    if ! curl -fsSL --retry 3 --retry-delay 2 -o "$acid_tmp" "$ACID2_BASE_URL/$acid_name"; then
+        rm -f "$acid_tmp"
+        echo "テスト ROM の取得に失敗しました: $acid_name" >&2
+        return 1
+    fi
+    if ! verify_sha256 "$acid_tmp" "$acid_hash"; then
+        rm -f "$acid_tmp"
+        return 1
+    fi
+    mv "$acid_tmp" "$acid_path"
+}
 
+fetch_acid2 dmg-acid2.gb "$ROMS_DIR/acid2/dmg-acid2.gb" "$DMG_ACID2_SHA256"
+fetch_acid2 cgb-acid2.gbc "$ROMS_DIR/acid2/cgb-acid2.gb" "$CGB_ACID2_SHA256"
+# 既存のスイートの .gb 名と利用ガイドの .gbc 名を両方維持する。
+if [ ! -e "$ROMS_DIR/acid2/cgb-acid2.gbc" ]; then
+    cp "$ROMS_DIR/acid2/cgb-acid2.gb" "$ROMS_DIR/acid2/cgb-acid2.gbc"
+fi
+verify_sha256 "$ROMS_DIR/acid2/cgb-acid2.gbc" "$CGB_ACID2_SHA256"
 echo "fetch_test_roms.sh: 完了。配置先: $ROMS_DIR"
