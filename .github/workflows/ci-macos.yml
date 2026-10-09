@@ -1,0 +1,54 @@
+name: CI macOS
+
+"on":
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-macos-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  macos:
+    name: テストとビルド（macOS 15 ${{ matrix.cpu }}）
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - cpu: Apple Silicon
+            arch: arm64
+            runner: macos-15
+          - cpu: Intel
+            arch: amd64
+            runner: macos-15-intel
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: 依存を導入
+        run: brew install sbcl sdl2
+      - name: テスト ROM を取得
+        run: sh scripts/fetch_test_roms.sh
+      - name: 全テスト
+        run: sh scripts/test.sh
+      - name: 実行ファイルをビルド
+        run: sh scripts/build.sh
+      - name: バージョンとヘッドレス120フレームを検証
+        run: sh scripts/smoke.sh
+      - name: 配布物を作成
+        run: sh scripts/package_zip.sh
+      - name: 配布物の CPU と展開後の実行を検証
+        run: sh scripts/verify_macos_package.sh "${{ matrix.arch }}"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: LispGB-macos-${{ matrix.arch }}
+          path: dist/LispGB-*-macos-${{ matrix.arch }}.zip
+          if-no-files-found: error

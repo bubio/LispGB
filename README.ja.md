@@ -14,7 +14,7 @@ Common Lisp（SBCL）で書いた Game Boy / Game Boy Color エミュレータ�
 
 Linux amd64 / arm64。Ubuntu 24.04 以降を対象としています。両アーキテクチャでローカル動作と CI を確認済みで、配布ビルドは Ubuntu 24.04 で行います。
 
-macOS は Apple Silicon でローカルビルドと動作を確認済みです。Intel のライブラリパスと ZIP 名にも対応していますが、Intel でのビルドは未検証です。
+macOS は Apple Silicon / Intel をそれぞれの CI ランナーでネイティブビルドします。ZIP は `macos-arm64`（Apple Silicon）と `macos-amd64`（Intel）に分かれています。Apple Silicon でのローカル GUI 動作は確認済みですが、Intel の GUI 動作は未検証です。
 
 ## インストール
 

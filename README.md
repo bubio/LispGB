@@ -14,7 +14,7 @@ The emulation core is based on [RuxBoy](https://github.com/bubio/ruxboy), whose 
 
 Linux amd64 / arm64, targeting Ubuntu 24.04 or newer. Both architectures have been verified locally and in CI. Release builds use Ubuntu 24.04.
 
-macOS: local builds and operation are verified on Apple Silicon. Intel library paths and ZIP naming are supported, but Intel builds have not been verified.
+macOS Apple Silicon and Intel: separate native builds are produced by macOS CI. ZIP files are named `macos-arm64` (Apple Silicon) and `macos-amd64` (Intel). Local GUI operation has been verified on Apple Silicon; Intel GUI operation has not been verified.
 
 ## Installation
 

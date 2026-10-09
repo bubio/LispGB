@@ -54,7 +54,7 @@ SDL2 は dylib 名、Homebrew の arm64 / Intel 標準パス、システムの F
 UI 操作ツールで識別するため、検証時だけ一時的な .app に実行ファイルをコピーした。
 配布は仕様どおり CLI の ZIP。保存・復元と B 入力は SDL イベントによる自動検証で、
 物理キーによるゲーム操作は別途確認する。
-macOS の CI は今回追加しておらず、検証結果はローカル環境のもの。
+T075 / T076 の検証結果はローカル環境のもの。macOS CI は T077 で別途追加した。
 
 相対パスの ROM で F1 を使うと rename の宛先ディレクトリが二重になる不具合も確認した。
 アトミック書き込みとサイズ不一致セーブの退避で、rename の宛先を絶対パスへ解決し、
@@ -74,3 +74,21 @@ Permission denied で止まった。`cp -f` でコピー先を置き換え、所
 コピー先を読み取り専用にした状態からのビルドと、続けての再ビルドを確認。
 バージョン表示・ヘッドレス120フレーム・ZIP作成が成功し、全回帰テストは131件合格、
 不合格0件、既知の不合格3件。
+
+### macOS CI（T077）
+
+ユーザーが Apple Silicon 環境でのソースビルドと動作を確認済み。
+Linux の `ci.yml` と分け、`.github/workflows/ci-macos.yml` に macOS 用の CI を定義する。
+[GitHub のランナー一覧](https://docs.github.com/en/actions/reference/runners/github-hosted-runners)
+に従い、Apple Silicon は `macos-15`、Intel は `macos-15-intel` を使う。
+
+| 対象 | ZIP / artifact |
+|---|---|
+| Apple Silicon | `LispGB-<version>-macos-arm64.zip` / `LispGB-macos-arm64` |
+| Intel | `LispGB-<version>-macos-amd64.zip` / `LispGB-macos-amd64` |
+
+各ランナーで Homebrew の SBCL / SDL2 を導入し、全テスト、ビルド、ヘッドレス120フレーム、
+ZIP作成と展開後の実行を検証する。`scripts/verify_macos_package.sh` は `lipo -archs` で
+実行ファイルと同梱 dylib が対象 CPU だけを持つことを確認する。ユニバーサルバイナリは作らない。
+Intel の CI はヘッドレス検証であり、実ウィンドウ・実音声でのプレイ確認とは区別する。
+実行結果と ZIP は GitHub Actions の「CI macOS」から参照する。

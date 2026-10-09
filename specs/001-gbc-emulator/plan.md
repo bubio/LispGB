@@ -33,7 +33,8 @@ SDL2（`libSDL2-2.0.so.0`）だけで、起動時に動的に読み込む。外�
 Linux amd64 はローカルと Ubuntu 24.04 CI で確認済み（2026-10-09）。
 macOS は Apple Silicon のローカル環境に展開する。SDL2 は Homebrew の dylib または
 Framework を遅延ロードし、設定は `~/Library/Application Support/LispGB/` に保存する。
-macOS Intel と Windows は実動作未検証。
+macOS Intel は専用 CI ランナーでネイティブビルドとヘッドレス実行を検証する。
+Apple Silicon / Intel の ZIP は別々に作成する。macOS Intel の GUI と Windows は実動作未検証。
 
 **Project Type**: デスクトップの CLI アプリケーション（エミュレーター）
 

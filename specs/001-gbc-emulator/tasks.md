@@ -232,6 +232,8 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 
 - [X] T076 macOS の再ビルドで読み取り専用の zstd コピーを上書きできるようにし、連続ビルド・実行ファイル・全回帰テストを検証する
 
+- [X] T077 Linux と別ファイルに macOS CI を追加し、Intel / Apple Silicon のネイティブビルドと単一 CPU の ZIP を検証する。コミット・プッシュして両方の CI 成功と artifact を確認する
+
 ---
 
 ## Dependencies & Execution Order
