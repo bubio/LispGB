@@ -89,3 +89,39 @@ jobs:
           files: dist/LispGB-*-linux-${{ matrix.arch }}.zip
           fail_on_unmatched_files: true
           generate_release_notes: true
+  macos:
+    name: リリース（macOS 15 ${{ matrix.arch }}）
+    if: github.ref_type == 'tag'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: arm64
+            runner: macos-15
+          - arch: amd64
+            runner: macos-15-intel
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: 依存を導入
+        run: brew install sbcl sdl2
+      - name: テスト ROM を取得
+        run: sh scripts/fetch_test_roms.sh
+      - name: 全テスト
+        run: sh scripts/test.sh
+      - name: 実行ファイルをビルド
+        run: sh scripts/build.sh
+      - name: バージョンとヘッドレス120フレームを検証
+        run: sh scripts/smoke.sh
+      - name: 配布物を作成
+        run: sh scripts/package_zip.sh
+      - name: 配布物の CPU と展開後の実行を検証
+        run: sh scripts/verify_macos_package.sh "${{ matrix.arch }}"
+      - name: GitHub Releases へ添付
+        uses: softprops/action-gh-release@v3
+        with:
+          files: dist/LispGB-*-macos-${{ matrix.arch }}.zip
+          fail_on_unmatched_files: true

@@ -141,3 +141,16 @@ SDL2 は [公式配布](https://libsdl.org/release/) の固定 ZIP を SHA256 �
 PowerShell 5.1 / 7 の両方で、スクリプトをドットソースして LASTEXITCODE を返す
 CI と同じ呼び出しが終了コード0となることを確認した。実行ファイル欠落時は終了コード1。
 修正後の GitHub CI は未プッシュのため未実行。
+
+## macOS Release（T087、2026-10-09）
+
+`.github/workflows/release.yml` に macOS arm64 / amd64 のタグ用ジョブを追加した。
+CI と同じ `macos-15` / `macos-15-intel` を使う（[GitHub の公式ランナー一覧](https://docs.github.com/en/actions/reference/runners/github-hosted-runners)）。
+必須 ROM モードで取得・全テスト・ビルド・ヘッドレス120フレーム・ZIP作成を実行し、
+`verify_macos_package.sh` が単一 CPU と展開後の実行を確認してから ZIP を Release に添付する。
+手動実行でもタグを選択した場合だけ公開する。
+
+Apple Silicon のローカル環境では全144テスト合格、不合格0、既知3件。
+ビルド・ヘッドレス・ZIP作成・単一 CPU と展開後の実行検証も成功。
+全ワークフローの actionlint に合格した。Intel と GitHub 上の Release 実行は今回未検証。
+プッシュ・タグ作成・公開は行っていない。
