@@ -67,6 +67,18 @@
     (is (equal #P"/tmp/home/Library/Application Support/LispGB/"
                (lispgb::config-directory xdg #P"/tmp/home/" :macos)))))
 
+(deftest config-location-windows ()
+  (is (equal #P"C:/test/Roaming/LispGB/"
+             (lispgb::config-directory "/ignored" #P"C:/test/home/" :windows "C:/test/Roaming")))
+  (dolist (appdata (list nil ""))
+    (is (equal #P"C:/test/home/AppData/Roaming/LispGB/"
+               (lispgb::config-directory nil #P"C:/test/home/" :windows appdata)))))
+
+(deftest sdl-library-windows ()
+  ;; 作業ディレクトリが異なっても実行ファイル横の DLL を優先する。
+  (is (equal '("C:/test/program/SDL2.dll" "SDL2.dll")
+             (lispgb::sdl-library-candidates :windows #P"C:/test/program/lispgb.exe"))))
+
 (deftest atomic-save-relative-path ()
   ;; rename-file の相対宛先は元ファイルのディレクトリに対して解決される。
   (let* ((root (asdf:system-source-directory "lispgb"))

@@ -50,12 +50,21 @@
   (when (if (typep result 'sb-sys:system-area-pointer) (null-pointer-p result) (minusp result))
     (error "SDL2: ~A" (sdl-get-error)))
   result)
+(defun sdl-library-candidates (&optional
+                               (platform (cond ((uiop:os-windows-p) :windows)
+                                               ((uiop:os-macosx-p) :macos) (t :linux)))
+                               (runtime sb-ext:*runtime-pathname*))
+  "実行ファイル横の DLL と OS ごとの標準保存先を返す。"
+  (case platform
+    (:windows (list (namestring (merge-pathnames "SDL2.dll"
+                                 (uiop:pathname-directory-pathname runtime))) "SDL2.dll"))
+    (:macos '("libSDL2.dylib" "/opt/homebrew/lib/libSDL2.dylib"
+              "/usr/local/lib/libSDL2.dylib" "/Library/Frameworks/SDL2.framework/SDL2"))
+    (otherwise '("libSDL2-2.0.so.0"))))
+
 (defun load-sdl2 ()
   ;; SDL は通常実行時だけ読み込む。保存するコアイメージには含めない。
-  (dolist (library #+darwin '("libSDL2.dylib" "/opt/homebrew/lib/libSDL2.dylib"
-                            "/usr/local/lib/libSDL2.dylib"
-                            "/Library/Frameworks/SDL2.framework/SDL2")
-                  #-darwin '("libSDL2-2.0.so.0"))
+  (dolist (library (sdl-library-candidates))
     (handler-case
         (progn
           (sb-alien:load-shared-object library :dont-save t)
@@ -63,8 +72,9 @@
           (sdl-set-main-ready)
           (return-from load-sdl2 t))
       (error () nil)))
-  (error #+darwin "SDL2 が見つかりません。brew install sdl2 で導入してください。"
-         #-darwin "SDL2 が見つかりません。sudo apt install libsdl2-2.0-0 で導入してください。"))
+  (error #+win32 "SDL2 が見つかりません。x64 版 SDL2.dll を lispgb.exe と同じ場所に置いてください。"
+         #+darwin "SDL2 が見つかりません。brew install sdl2 で導入してください。"
+         #-(or win32 darwin) "SDL2 が見つかりません。sudo apt install libsdl2-2.0-0 で導入してください。"))
 
 ;; SDL_events.h と SDL_keyboard.h の定義に従う。arm64 で C の offsetof とも照合済み。
 ;; SDL_Event は56バイト、type=0、key.keysym.sym=20、key.repeat=13。

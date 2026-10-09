@@ -1,0 +1,28 @@
+;;; PowerShell からもシェルと同じ ASDF 設定で実行する。
+(require :asdf)
+(let* ((mode (or (uiop:getenv "LISPGB_ACTION") "test"))
+       (safe (string= mode "test"))
+       (root (truename "./"))
+       (cache (merge-pathnames (if safe "build/fasl-safe/" "build/fasl/") root)))
+  (when safe (pushnew :lispgb-safe *features*))
+  (ensure-directories-exist cache)
+  (asdf:initialize-output-translations
+   `(:output-translations (,(merge-pathnames "**/*.*" root)
+                          ,(merge-pathnames "**/*.*" cache)) :ignore-inherited-configuration))
+  (asdf:load-asd (merge-pathnames "lispgb.asd" root))
+  (asdf:load-system (if safe "lispgb/tests" "lispgb")))
+(let ((mode (or (uiop:getenv "LISPGB_ACTION") "test")))
+  (cond
+    ((string= mode "test")
+     (unless (directory "tests/roms/**/*.gb*")
+       (format t "テスト ROM がないため ROM テストをスキップします。~%"))
+     (let ((failures (uiop:symbol-call :lispgb.tests :run-tests)))
+       (when (zerop failures) (format t "全テスト合格~%"))
+       (uiop:quit (if (zerop failures) 0 1))))
+    ((string= mode "build")
+     (apply #'sb-ext:save-lisp-and-die "build/lispgb.exe" :executable t
+            :save-runtime-options t :toplevel (symbol-function (find-symbol "MAIN" :lispgb))
+            (when (member :sb-core-compression *features*) (list :compression t))))
+    ((string= mode "sdl") (load "scripts/smoke_sdl.lisp"))
+    ((string= mode "bench") (load "scripts/bench.lisp"))
+    (t (error "実行モードが不正です: ~A" mode))))
