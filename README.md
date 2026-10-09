@@ -18,6 +18,13 @@ macOS Apple Silicon and Intel: separate native builds are produced by macOS CI. 
 
 ## Installation
 
+Windows 11 x64 is supported. The Windows ZIP includes SDL2.dll; keep it beside `lispgb.exe`.
+
+```powershell
+.\lispgb.exe --version
+.\lispgb.exe game.gbc
+```
+
 Extract the distribution ZIP and install the SDL2 runtime:
 
 ```sh
@@ -53,6 +60,15 @@ sh scripts/build.sh
 ```
 
 No Quicklisp packages are required.
+
+On Windows, add x64 SBCL to PATH and run in PowerShell:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/build.ps1
+powershell -ExecutionPolicy Bypass -File scripts/fetch_sdl2.ps1
+.\build\lispgb.exe --version
+.\build\lispgb.exe game.gbc
+```
 
 ## Usage
 
@@ -101,6 +117,8 @@ volume = 100
 ```
 
 On macOS, configuration and recent ROMs are stored in `~/Library/Application Support/LispGB/`, regardless of `XDG_CONFIG_HOME`.
+
+On Windows, configuration and recent ROMs are stored in `%APPDATA%\LispGB\`.
 
 Volume ranges from 0 to 100. Command-line options override configuration values. `#` starts a comment. Invalid entries are ignored. `recent.txt` in the same directory stores up to ten recent ROM paths.
 

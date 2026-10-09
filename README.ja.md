@@ -18,6 +18,14 @@ macOS は Apple Silicon / Intel をそれぞれの CI ランナーでネイテ�
 
 ## インストール
 
+Windows 11 x64 に対応しています。Windows 用 ZIP には SDL2.dll を同梱します。
+展開した `lispgb.exe` と `SDL2.dll` は同じディレクトリに置いてください。
+
+```powershell
+.\lispgb.exe --version
+.\lispgb.exe game.gbc
+```
+
 配布 ZIP を展開し、SDL2 の実行時ライブラリを導入してください。
 
 ```sh
@@ -53,6 +61,15 @@ sh scripts/build.sh
 ```
 
 Quicklisp のパッケージは不要です。
+
+Windows の場合は x64 版 SBCL を PATH に追加し、PowerShell で実行します。
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/build.ps1
+powershell -ExecutionPolicy Bypass -File scripts/fetch_sdl2.ps1
+.\build\lispgb.exe --version
+.\build\lispgb.exe game.gbc
+```
 
 ## 使い方
 
@@ -101,6 +118,8 @@ volume = 100
 ```
 
 macOS では設定と履歴を `~/Library/Application Support/LispGB/` に保存します。`XDG_CONFIG_HOME` の値には依存しません。
+
+Windows では `%APPDATA%\LispGB\` に設定と履歴を保存します。
 
 音量は0〜100です。CLI の指定が設定ファイルより優先されます。`#` 以降はコメントで、不正な項目は無視します。同じ場所の `recent.txt` には最大10件の ROM のパスを保存します。
 

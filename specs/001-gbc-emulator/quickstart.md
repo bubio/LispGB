@@ -93,3 +93,20 @@ SDL イベントキューを通じた入力・保存・復元・終了を検証�
 設定と保存先は一時ディレクトリに隔離する。
 macOS の通常の設定先は `~/Library/Application Support/LispGB/`、
 ZIP は `dist/LispGB-<version>-macos-arm64.zip`。
+
+## Windows 11 x64
+
+Windows では、シェル版の代わりに同名の PowerShell スクリプトを使う。
+全テストは `powershell -ExecutionPolicy Bypass -File scripts/test.ps1`、
+ビルドは `powershell -ExecutionPolicy Bypass -File scripts/build.ps1`。
+SDL2 の導入後、次のコマンドで cgb-acid2 を起動する。
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/fetch_test_roms.ps1
+powershell -ExecutionPolicy Bypass -File scripts/fetch_sdl2.ps1
+.\build\lispgb.exe tests/roms/acid2/cgb-acid2.gbc
+```
+
+設定と履歴は `%APPDATA%\LispGB\`、保存データは ROM と同じ場所に作られる。
+配布 ZIP は `scripts/package_zip.ps1`、展開後の検証は `scripts/verify_windows_package.ps1`。
+詳しい開発手順と検証範囲は `docs/dev/platforms.md` を参照する。

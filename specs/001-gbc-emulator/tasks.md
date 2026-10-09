@@ -245,7 +245,7 @@ description: "LispGB（Game Boy Color エミュレーター）の実装タスク
 ### Windows 11 x86_64（2026-10-09）
 
 - [X] T081 Windows の設定保存先と SDL2.dll の遅延読み込みをテスト先行で実装し、PowerShell のテスト・ビルド・ROM 取得手順を整備する。全回帰テストと実行ファイルを検証する。
-- [ ] T082 Windows x64 の配布 ZIP と CI を追加し、展開後のヘッドレス実行、SDL の描画・音声・入力・保存復元を検証する。利用手順と検証結果を記録する。
+- [X] T082 Windows x64 の配布 ZIP と CI を追加し、展開後のヘッドレス実行、SDL の描画・音声・入力・保存復元を検証する。利用手順と検証結果を記録する。
 
 ### Phase Dependencies
 

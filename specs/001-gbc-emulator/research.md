@@ -154,3 +154,16 @@ SDL2 2.32.10）。検証用の使い捨てスクリプトは scratchpad で実�
 - **Rationale**: 憲法の「ローカルと CI で同じ手順」と、R4 の glibc 互換性を両方満たす。
 - **注意**: ワークフローのファイルは用意するが、プッシュ（＝CI の実行）はユーザーの
   明示的な指示があるまで行わない。
+
+## Windows x64 の実装判断（2026-10-09）
+
+- SBCL 2.6.9 の Windows ランタイムを save-lisp-and-die で lispgb.exe に連結する。
+  ZIP 展開後、SBCL を探索できない PATH で実行できた。
+- SDL2 は [公式配布](https://libsdl.org/release/) の 2.32.10 x64 ZIP を SHA256 で固定する。
+  SDL2.dll と README-SDL.txt、zlib ライセンスを同梱し、実行ファイルの場所から探索する。
+- 実デバイスの描画でゼロ除算例外を再現したため、既存 macOS と同じく C 呼び出し中のみ
+  浮動小数点例外を抑制する。Lisp 側の設定が変わらないことをスモークテストで確認する。
+- PowerShell 5.1 の日本語ソースは UTF-8 BOM で保存する。Git Bash は ROM 取得だけに用い、
+  コミットと ROM 一覧を既存の取得スクリプトと共有する。
+- CI の SBCL は [Chocolatey の sbcl パッケージ](https://community.chocolatey.org/packages/sbcl)
+  を導入する。既存 Linux / macOS と独立した Windows ジョブで回帰を確認する。

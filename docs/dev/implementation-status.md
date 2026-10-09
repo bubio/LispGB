@@ -73,3 +73,11 @@ Ubuntu 24.04 の実動作は Docker / Podman がないため未検証。CI / Rel
 
 スキルの前提チェックは成功し、要求チェックリストは16/16件完了。
 `.specify/extensions.yml` がないため、実装後の拡張フックは対象なし。
+
+## Windows 版（T081 / T082、2026-10-09）
+
+Windows 11 x86_64 / SBCL 2.6.9 で全139テスト合格、既知の不合格3件。
+PowerShell 5.1 のビルド・テスト・ベンチマーク・配布スクリプトを追加した。
+SDL2.dll の遅延読み込みと APPDATA 保存先を実装し、実描画・音声デバイス・SDL 入力イベント・
+保存復元を検証した。x64 ZIP の展開後も SBCL を探索できない PATH でヘッドレス実行成功。
+Windows CI と Release は定義済み、未プッシュのため未実行。詳細は platforms.md を参照。

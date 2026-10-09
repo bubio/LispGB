@@ -9,6 +9,47 @@ permissions:
   contents: write
 
 jobs:
+  windows:
+    name: リリース（Windows x64）
+    if: github.ref_type == 'tag'
+    runs-on: windows-2022
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: SBCL を導入
+        run: |
+          choco install sbcl -y --no-progress
+          if ($LASTEXITCODE -ne 0) { throw 'SBCL の導入に失敗しました。' }
+          "$env:ProgramFiles/Steel Bank Common Lisp" | Out-File -FilePath $env:GITHUB_PATH -Append
+      - name: テスト ROM と SDL2 を取得
+        run: |
+          ./scripts/fetch_test_roms.ps1
+          ./scripts/fetch_sdl2.ps1
+      - name: 全テストとビルド
+        run: |
+          ./scripts/test.ps1
+          ./scripts/build.ps1
+          ./scripts/smoke.ps1
+      - name: SDL の描画とイベントを検証
+        env:
+          SDL_VIDEODRIVER: dummy
+          SDL_AUDIODRIVER: dummy
+        run: ./scripts/smoke_sdl.ps1
+      - name: 配布物を作成して展開後を検証
+        run: |
+          ./scripts/package_zip.ps1
+          ./scripts/verify_windows_package.ps1
+      - name: GitHub Releases へ添付
+        uses: softprops/action-gh-release@v3
+        with:
+          files: dist/LispGB-*-windows-amd64.zip
+          fail_on_unmatched_files: true
+          generate_release_notes: true
   linux:
     name: リリース（Ubuntu 24.04 ${{ matrix.arch }}）
     # 手動実行でもタグを選択した場合だけ公開する。

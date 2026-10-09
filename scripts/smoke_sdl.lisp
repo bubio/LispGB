@@ -44,6 +44,7 @@
                 (smoke-key input 122)
                 (assert (member :b (input-buttons input)))
                 (assert (member :quit (smoke-key input 27)))
+                (assert (equal modes (sb-int:get-floating-point-modes)))
                 (format t "SDL 実描画・音声デバイス・入力イベント・保存復元の検証合格~%"))
             (when audio (close-audio audio))
             (close-video video))))

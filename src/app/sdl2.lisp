@@ -4,16 +4,16 @@
   "C の署名を一か所に並べ、SBCL の FFI 宣言を生成する。"
   `(progn
      ,@(loop for (c-name lisp-name result . arguments) in definitions
-             for foreign-name = #+darwin (intern (format nil "%~A" lisp-name))
-                                #-darwin lisp-name
+             for foreign-name = #+(or darwin win32) (intern (format nil "%~A" lisp-name))
+                                #-(or darwin win32) lisp-name
              append
              `((sb-alien:define-alien-routine (,c-name ,foreign-name) ,result ,@arguments)
-               ,@#+darwin
+               ,@#+(or darwin win32)
                `((defun ,lisp-name ,(mapcar #'first arguments)
-                   ;; Cocoa の浮動小数点演算では、C 呼び出し中だけ SBCL の例外を抑制する。
+                   ;; Cocoa / Windows の描画処理では、C 呼び出し中だけ例外を抑制する。
                    (sb-int:with-float-traps-masked (:invalid :divide-by-zero :overflow)
                      (,foreign-name ,@(mapcar #'first arguments)))))
-               #-darwin nil))))
+               #-(or darwin win32) nil))))
 (define-sdl-functions
   ("SDL_SetMainReady" sdl-set-main-ready sb-alien:void)
   ("SDL_Init" sdl-init sb-alien:int (flags sb-alien:unsigned-int))

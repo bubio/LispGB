@@ -92,3 +92,40 @@ ZIP作成と展開後の実行を検証する。`scripts/verify_macos_package.sh
 実行ファイルと同梱 dylib が対象 CPU だけを持つことを確認する。ユニバーサルバイナリは作らない。
 Intel の CI はヘッドレス検証であり、実ウィンドウ・実音声でのプレイ確認とは区別する。
 実行結果と ZIP は GitHub Actions の「CI macOS」から参照する。
+
+## Windows 11 x86_64（2026-10-09、T081 / T082）
+
+SBCL 2.6.9、PowerShell 5.1、SDL2 2.32.10 x64 で検証した。
+全テストは139件合格、不合格0件、既知の不合格3件。両 acid2 のハッシュも一致した。
+Windows の描画処理が SBCL のゼロ除算例外を発生させたため、SDL の FFI 呼び出し中だけ
+浮動小数点例外を抑制する。終了後に Lisp の例外設定が戻ることも確認した。
+
+| 検証 | 結果 |
+|---|---|
+| ネイティブ描画・音声デバイス | cgb-acid2 を120フレーム描画、48kHzステレオ音声を送信、成功 |
+| 入力・保存復元 | SDL キューへ B / Esc / F1 / F3 を注入し、イベント処理と状態復元、音声キュー消去を確認 |
+| CI 用 dummy ドライバー | 同じ SDL スモークが合格 |
+| ヘッドレス | SDL ドライバーを無効にして120フレーム、BMP は69174バイト |
+| 単体実行ファイル | PATH を Windows system32 のみにし、SBCL_HOME を除去して version / help / headless が成功 |
+| 配布 ZIP | 展開後に version / headless と PE の x64 machine 値を確認 |
+| 性能 | cpu_instrs.gb、3000フレーム、7.3085秒、410.48fps、測定区間の割当0バイト |
+| Windows CI / Release | 定義済み。未プッシュのため GitHub 上では未実行 |
+
+実際の聞こえ方、長時間プレイ時の音切れ、物理キーボード操作は自動テストでは判定していない。
+商用ゲーム ROM は使用していない。
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/fetch_test_roms.ps1
+powershell -ExecutionPolicy Bypass -File scripts/test.ps1
+powershell -ExecutionPolicy Bypass -File scripts/build.ps1
+powershell -ExecutionPolicy Bypass -File scripts/fetch_sdl2.ps1
+powershell -ExecutionPolicy Bypass -File scripts/smoke.ps1
+powershell -ExecutionPolicy Bypass -File scripts/smoke_sdl.ps1
+powershell -ExecutionPolicy Bypass -File scripts/bench.ps1
+powershell -ExecutionPolicy Bypass -File scripts/package_zip.ps1
+powershell -ExecutionPolicy Bypass -File scripts/verify_windows_package.ps1
+```
+
+ROM 取得のみ Git for Windows が必要。通常のビルド・テスト・配布は PowerShell と SBCL で行う。
+日本語を含む .ps1 は Windows PowerShell 5.1 で読める UTF-8 BOM 形式。
+SDL2 は [公式配布](https://libsdl.org/release/) の固定 ZIP を SHA256 で照合し、zlib ライセンスを同梱する。

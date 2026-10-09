@@ -1,0 +1,52 @@
+name: CI Windows
+"on":
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ci-windows-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: SBCL を導入
+        run: |
+          choco install sbcl -y --no-progress
+          if ($LASTEXITCODE -ne 0) { throw 'SBCL の導入に失敗しました。' }
+          "$env:ProgramFiles/Steel Bank Common Lisp" | Out-File -FilePath $env:GITHUB_PATH -Append
+      - name: テスト ROM と SDL2 を取得
+        run: |
+          ./scripts/fetch_test_roms.ps1
+          ./scripts/fetch_sdl2.ps1
+      - name: 全テスト
+        run: ./scripts/test.ps1
+      - name: 実行ファイルをビルド
+        run: ./scripts/build.ps1
+      - name: ヘッドレス実行を検証
+        run: ./scripts/smoke.ps1
+      - name: SDL の描画とイベントを検証
+        env:
+          SDL_VIDEODRIVER: dummy
+          SDL_AUDIODRIVER: dummy
+        run: ./scripts/smoke_sdl.ps1
+      - name: 配布物を作成
+        run: ./scripts/package_zip.ps1
+      - name: 展開後の実行ファイルを検証
+        run: ./scripts/verify_windows_package.ps1
+      - uses: actions/upload-artifact@v7
+        with:
+          name: LispGB-windows-amd64
+          path: dist/LispGB-*-windows-amd64.zip
+          if-no-files-found: error

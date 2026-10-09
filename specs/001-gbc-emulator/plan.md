@@ -34,7 +34,11 @@ Linux amd64 はローカルと Ubuntu 24.04 CI で確認済み（2026-10-09）�
 macOS は Apple Silicon のローカル環境に展開する。SDL2 は Homebrew の dylib または
 Framework を遅延ロードし、設定は `~/Library/Application Support/LispGB/` に保存する。
 macOS Intel は専用 CI ランナーでネイティブビルドとヘッドレス実行を検証する。
-Apple Silicon / Intel の ZIP は別々に作成する。macOS Intel の GUI と Windows は実動作未検証。
+Apple Silicon / Intel の ZIP は別々に作成する。macOS Intel の GUI は実動作未検証。
+Windows 11 x86_64 は SBCL 2.6.9 でネイティブビルドし、SDL2.dll を実行ファイル横から
+遅延ロードする。設定と履歴は `%APPDATA%\LispGB\` に保存する。
+PowerShell 5.1 / 7 用のスクリプトから ASDF を実行し、Windows x64 の ZIP に SDL2 と
+ライセンスを同梱する。Windows 専用 CI は windows-2022 を使用する。
 
 **Project Type**: デスクトップの CLI アプリケーション（エミュレーター）
 
