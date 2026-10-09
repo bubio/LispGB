@@ -56,3 +56,80 @@
           (lispgb.core::load-state machine state)
           (lispgb.core:run-frame machine)
           (is (equalp future (lispgb.core::save-state machine))))))))
+
+(defun check-invalid-state (change &optional (rom (synthetic-rom :type #x10 :ram-code 3 :cgb #x80)))
+  "不正な本体を拒否して、保存対象外も含む現在の状態を維持する。"
+  (let* ((machine (lispgb.core:make-machine rom))
+         (donor (lispgb.core:make-machine rom))
+         (cpu (lispgb.core::machine-cpu machine)) (bus (lispgb.core::machine-bus machine))
+         (apu (lispgb.core::bus-apu bus)) (cart (lispgb.core::bus-cart bus))
+         (frame (lispgb.core:machine-framebuffer machine)))
+    (setf (lispgb.core::cpu-debug-ld-b-b-hit cpu) t
+          (lispgb.core::cartridge-ram-dirty cart) t
+          (lispgb.core::apu-ring-count apu) 1)
+    (fill (lispgb.core::apu-ring apu) 1234)
+    (vector-push-extend 65 (lispgb.core::bus-serial-log bus))
+    (let ((before (lispgb.core:save-state machine)))
+      (funcall change donor)
+      (is (signals-condition-p 'lispgb.core::savestate-error
+             (lambda () (lispgb.core:load-state machine (lispgb.core:save-state donor)))))
+      (is (equalp before (lispgb.core:save-state machine)))
+      (is (eq cpu (lispgb.core::machine-cpu machine)))
+      (is (eq bus (lispgb.core::machine-bus machine)))
+      (is (eq frame (lispgb.core:machine-framebuffer machine)))
+      (is (lispgb.core::cpu-debug-ld-b-b-hit cpu))
+      (is (lispgb.core::cartridge-ram-dirty cart))
+      (is (equalp #(65) (lispgb.core::bus-serial-log bus)))
+      (is (= 1 (lispgb.core::apu-ring-count apu)))
+      (is (every (lambda (value) (= value 1234)) (lispgb.core::apu-ring apu))))))
+
+(deftest savestate-invalid-ranges-and-relations ()
+  ;; スロットの型だけでは防げない範囲と、DMA / PPU の状態間の矛盾。
+  (dolist (case '((:cpu cpu-cycles -1)
+                 (:timer timer-overflow-delay -1) (:timer timer-overflow-delay 5)
+                 (:timer timer-tac 8)
+                 (:bus bus-dma-source 1) (:bus bus-hdma-source 1)
+                 (:bus bus-hdma-destination #x8001)
+                 (:ppu ppu-dot -1) (:ppu ppu-dot 80) (:ppu ppu-ly 144)
+                 (:ppu ppu-stat 1) (:ppu ppu-bcps #x40)
+                 (:apu apu-sweep-shadow -1) (:apu apu-sweep-shadow 2048)
+                 (:apu apu-sweep-timer 9)
+                 (:cart cartridge-rom-bank 0) (:cart cartridge-rom-bank 128)
+                 (:cart cartridge-bank-high 4) (:cart cartridge-banking-mode 2)
+                 (:joypad joypad-selection 1)))
+    (destructuring-bind (area name value) case
+      (check-invalid-state
+       (lambda (m)
+         (let* ((bus (lispgb.core::machine-bus m))
+                (object (ecase area (:cpu (lispgb.core::machine-cpu m)) (:bus bus)
+                          (:timer (lispgb.core::bus-timer bus)) (:ppu (lispgb.core::bus-ppu bus))
+                          (:apu (lispgb.core::bus-apu bus)) (:cart (lispgb.core::bus-cart bus))
+                          (:joypad (lispgb.core::bus-joypad bus))))
+                (accessor (find-symbol (symbol-name name) :lispgb.core)))
+           (funcall (fdefinition (list 'setf accessor)) value object))))))
+  (check-invalid-state (lambda (m) (let ((bus (lispgb.core::machine-bus m)))
+                                   (setf (lispgb.core::bus-dma-active bus) t
+                                         (lispgb.core::bus-dma-index bus) 160))))
+  (check-invalid-state (lambda (m) (setf (lispgb.core::bus-hdma-active (lispgb.core::machine-bus m)) t)))
+  (check-invalid-state (lambda (m) (let ((ppu (lispgb.core::bus-ppu (lispgb.core::machine-bus m))))
+                                   (setf (lispgb.core::ppu-mode ppu) 3 (lispgb.core::ppu-dot ppu) 0))))
+  (check-invalid-state (lambda (m) (let ((ch (aref (lispgb.core::apu-channels
+                                                 (lispgb.core::bus-apu (lispgb.core::machine-bus m))) 0)))
+                                   (setf (lispgb.core::audio-channel-length ch) 65))))
+  (check-invalid-state (lambda (m) (setf (aref (lispgb.core::cartridge-rtc
+                                               (lispgb.core::bus-cart (lispgb.core::machine-bus m))) 0) 60))))
+
+(deftest savestate-valid-boundaries ()
+  ;; 合法な端値は拒否しない。停止中や発音していない状態も保存できる。
+  (let* ((m (lispgb.core:make-machine (synthetic-rom :type #x1b :ram-code 3 :cgb #x80)))
+         (bus (lispgb.core::machine-bus m)) (timer (lispgb.core::bus-timer bus))
+         (cart (lispgb.core::bus-cart bus)) (ppu (lispgb.core::bus-ppu bus)))
+    (setf (lispgb.core::timer-overflow-delay timer) 4 (lispgb.core::timer-tac timer) 7
+          (lispgb.core::bus-dma-active bus) t (lispgb.core::bus-dma-index bus) 159
+          (lispgb.core::bus-hdma-active bus) t (lispgb.core::bus-hdma-remaining bus) 128
+          (lispgb.core::bus-hdma-source bus) #xfff0 (lispgb.core::bus-hdma-destination bus) #x9ff0
+          (lispgb.core::ppu-mode ppu) 1 (lispgb.core::ppu-ly ppu) 153 (lispgb.core::ppu-dot ppu) 455
+          (lispgb.core::cartridge-rom-bank cart) 511 (lispgb.core::cartridge-ram-bank cart) 15)
+    (let ((state (lispgb.core:save-state m)))
+      (lispgb.core:load-state m state)
+      (is (equalp state (lispgb.core:save-state m))))))

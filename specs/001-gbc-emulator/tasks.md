@@ -324,3 +324,10 @@ ASDF へ登録する。T018 の失敗を既知失敗として隠さず、全13�
 T052 の検証コマンドは T055 のヘッドレス CLI を使用するため、T053〜T055 の後で実施する。
 
 配布 ZIP の T066 は README を含めるため、独立タスク T069 を先に完了する。
+
+## Phase 9: Convergence
+
+- [X] T084 CRITICAL: src/core/savestate.lisp の内部状態値検証を補完する。timer-overflow-delay=-1 を含む不正なセーブステートが load-state に受理され、現在の状態が置き換わる問題を修正し、Timer・DMA・PPU・APU・MBC 等の復号値と状態間の不変条件を確認する。不正値・境界値の入力が savestate-error で拒否され、全状態が一切変更されないことを tests/unit/savestate-test.lisp で検証し、正常な保存復元と既存テストの合格を維持する per Constitution IV, FR-012, US2/AC3, T047 (contradicts)
+- [ ] T085 CRITICAL: scripts/fetch_test_roms.sh の dmg-acid2 / cgb-acid2 取得をコミット固定の取得元に改め、取得または生成した ROM を固定したダイジェストで照合する。現在の v1.0 / v1.1 リリース URL だけに依存する取得を置き換え、PowerShell の共有取得経路にも反映する。既存の参照フレームハッシュを保持して両 acid2 の合格を検証し、固定元と再現手順を docs/dev/ に記録する per Constitution II, FR-021, T004 (contradicts)
+- [ ] T086 HIGH: scripts/fetch_test_roms.sh の acid2 取得失敗を非0終了として伝播させ、scripts/test.sh と scripts/run.lisp に CI / Release 用の必須 ROM 完備検査を追加する。dmg-acid2 が欠落しても tests/suites/acid2.lisp が登録を省略しテスト全体を成功させる経路を防ぎ、両 acid2 と指定された Blargg / Mooneye の必須集合を検査する。ROM 未取得時のローカルの明示的スキップは T007 に従って維持し、取得失敗・一部欠落・完備時を検証する per SC-003, US4/AC1, FR-022, T004, T007, T026, T035, T067 (partial)
+- [ ] T087 HIGH: .github/workflows/release.yml に macOS arm64 / amd64 のタグ用リリースジョブを追加する。既存の macOS CI と同じ取得・全テスト・ビルド・ヘッドレス実行・ZIP 作成・scripts/verify_macos_package.sh による単一 CPU と展開後の実行検証を再利用し、検証済みの各 ZIP を GitHub Releases に添付する。ローカルと CI の手順一致およびワークフロー構文を検証する。公開を伴うタグのプッシュはユーザーの明示的な指示を待つ per FR-024, FR-023, plan: Target Platform / 配布, T068, T075, T077 (missing)
