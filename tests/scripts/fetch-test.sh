@@ -34,6 +34,14 @@ export PATH="$LISPGB_FETCH_TEST/bin:$PATH"
 rm "$LISPGB_FETCH_TEST/tests/roms/acid2/"*
 sh "$LISPGB_FETCH_TEST/scripts/fetch_test_roms.sh" > "$LISPGB_FETCH_TEST/output" 2>&1
 test "$(wc -l < "$LISPGB_FETCH_LOG" | tr -d ' ')" -eq 2
+# Windows のチェックアウトと同じ CRLF の一覧でも照合できる。
+awk '{ sub(/\r$/, ""); printf "%s\r\n", $0 }' "$LISPGB_FETCH_TEST/tests/rom-manifest.txt" > "$LISPGB_FETCH_TEST/manifest-crlf"
+mv "$LISPGB_FETCH_TEST/manifest-crlf" "$LISPGB_FETCH_TEST/tests/rom-manifest.txt"
+if ! sh "$LISPGB_FETCH_TEST/scripts/fetch_test_roms.sh" > "$LISPGB_FETCH_TEST/output" 2>&1; then
+    cat "$LISPGB_FETCH_TEST/output" >&2
+    echo 'CRLF の必須 ROM 一覧を照合できません。' >&2; exit 1
+fi
+test "$(wc -l < "$LISPGB_FETCH_LOG" | tr -d ' ')" -eq 2
 grep -q '/c458e7c5d2d350fb37a1931c40da9f758d28d240/.github/actions/dmg-acid2.gb' "$LISPGB_FETCH_LOG"
 grep -q '/c458e7c5d2d350fb37a1931c40da9f758d28d240/.github/actions/cgb-acid2.gbc' "$LISPGB_FETCH_LOG"
 cmp "$LISPGB_FETCH_REFERENCE/dmg-acid2.gb" "$LISPGB_FETCH_TEST/tests/roms/acid2/dmg-acid2.gb"

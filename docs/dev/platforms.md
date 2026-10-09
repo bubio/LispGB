@@ -170,3 +170,16 @@ macOS arm64 でビルドし、`LispGB 1.0.0`、ヘッドレス120フレーム、
 `LispGB-1.0.0-macos-arm64.zip` の単一 CPU と展開後の実行が成功。
 今回の変更はバージョン・README・CI 条件のみで、コアの再変更はない。
 プッシュ・タグ作成・GitHub Release 公開は未実施。
+
+## Windows CI の CRLF 一覧照合（T089、2026-10-09）
+
+[失敗した CI](https://github.com/bubio/LispGB/actions/runs/37894779788) は ROM 取得ステップで、
+取得済みの `acid2/cgb-acid2.gb` を未取得と判定して終了1となった。
+必須 ROM 一覧を CRLF に変換すると、末尾の CR がパスに残り、同じエラーを再現できた。
+一覧の照合前に末尾 CR を除去するように修正した。
+
+取得回帰テストに CRLF のキャッシュ照合を追加。修正前に失敗、修正後に成功を確認した。
+Windows の `scripts/test.ps1` も必須モードでは既存の Git Bash を使って同じ取得回帰を実行する。
+通常のローカル単体テストには Git Bash を必須にしない。
+macOS の必須モードで全144テスト合格、不合格0、既知3件。シェル構文・actionlint・
+差分検査も合格した。修正後の Windows CI は未プッシュのため今回未検証。
